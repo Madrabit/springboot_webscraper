@@ -6,4 +6,6 @@ public interface TargetSite {
     void scrapeOneLetter(SiteLetters letter);
 
     void scrapeAllLetters();
+
+    String getStatus();
 }

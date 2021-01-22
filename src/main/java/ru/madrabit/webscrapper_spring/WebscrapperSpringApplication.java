@@ -11,8 +11,6 @@ public class WebscrapperSpringApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(WebscrapperSpringApplication.class, args);
-        TargetSite test24su = new Test24();
-        test24su.scrapeOneLetter(SiteLetters.A_1);
     }
 
 }

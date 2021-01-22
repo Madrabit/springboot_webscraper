@@ -22,12 +22,15 @@ public class CustomScrapperTest24 implements Scrapper {
     private SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
     List<Question> questionList = new LinkedList<>();
     Map<Enum<SiteLetters>, String> letters = new HashMap<>();
+    private String status;
 
     @Override
     public void work(SiteLetters letter) {
+        status = "In process";
         if (seleniumHandler.start(true)) {
             seleniumHandler.openPage(START_URL);
             log.info("Opened main page: {}", START_URL);
+
             UrlCrawler urlCrawler = new UrlCrawlerImpl(seleniumHandler);
             if (letter.equals(SiteLetters.A_1)) {
                 seleniumHandler.openPage(ElementsConst.A_TICKETS);
@@ -58,6 +61,16 @@ public class CustomScrapperTest24 implements Scrapper {
         if (!isEmpty) {
             CreateExcel excelDemo = new CreateExcel(letter);
             excelDemo.createExcel(questionList);
+            status = "Finished";
         }
+    }
+
+    @Override
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
