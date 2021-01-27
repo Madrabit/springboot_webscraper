@@ -32,5 +32,16 @@ public class LauncherService {
         return site.getStatus();
     }
 
+    public String executeAll() {
+        Thread scrapThread = new Thread(() -> {
+            Arrays.stream(SiteLetters.values())
+                    .forEach(letter -> site.scrapeOneLetter(letter));
+        });
+        scrapThread.start();
+        return "started";
+    }
 
+    public void stop() {
+        site.stop();
+    }
 }

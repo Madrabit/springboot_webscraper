@@ -6,4 +6,8 @@ public interface Scrapper {
     void work(SiteLetters letter);
 
     String getStatus();
+
+    void stop();
+
+    void setStatus(String status);
 }

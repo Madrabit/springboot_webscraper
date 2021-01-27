@@ -8,4 +8,6 @@ public interface TargetSite {
     void scrapeAllLetters();
 
     String getStatus();
+
+    void stop();
 }

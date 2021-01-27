@@ -19,6 +19,7 @@ public class QuestionsParser {
     private final SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
     private final List<String> ticketsList;
     private final String id;
+    private boolean isStopped;
 
     public QuestionsParser(List<String> ticketsList, String id) {
         this.ticketsList = ticketsList;
@@ -37,6 +38,10 @@ public class QuestionsParser {
         List<Question> questionList = new LinkedList<>();
         this.setQuestionSerial(0);
         for (String ticket : ticketsList) {
+            if (isStopped) {
+                seleniumHandler.stop();
+                return null;
+            }
             moveToUrl(ticket);
             if (seleniumHandler.getElement(".entry-content")
                     .getText().contains("Этот тест в настоящее время неактивен.")) {
@@ -58,6 +63,10 @@ public class QuestionsParser {
     }
 
     private Question parseQuestion(WebElement questionDiv, String id) {
+        if (isStopped) {
+            seleniumHandler.stop();
+            return null;
+        }
         Question question = new Question(
                 id + "-" + ++questionSerial,
                 questionDiv.findElement(By.cssSelector(".show-question-content")).getText()
@@ -84,4 +93,11 @@ public class QuestionsParser {
                 .stream().map(questionDiv -> parseQuestion(questionDiv, id)).collect(toList());
     }
 
+    public boolean isStopped() {
+        return isStopped;
+    }
+
+    public void setStopped(boolean stopped) {
+        isStopped = stopped;
+    }
 }

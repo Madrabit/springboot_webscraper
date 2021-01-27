@@ -30,6 +30,11 @@ public class Test24 implements TargetSite {
         return scraperForOne.getStatus();
     }
 
+    public void stop() {
+        scraperForOne.stop();
+        scraperForOne.setStatus("stopped");
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }

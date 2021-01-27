@@ -23,21 +23,32 @@ public class CustomScrapperTest24 implements Scrapper {
     List<Question> questionList = new LinkedList<>();
     Map<Enum<SiteLetters>, String> letters = new HashMap<>();
     private String status;
+    private boolean isStopped;
+    private QuestionsParser questionsParser;
 
     @Override
     public void work(SiteLetters letter) {
         status = "In process";
         if (seleniumHandler.start(true)) {
+            isStopped = false;
             seleniumHandler.openPage(START_URL);
             log.info("Opened main page: {}", START_URL);
 
             UrlCrawler urlCrawler = new UrlCrawlerImpl(seleniumHandler);
             if (letter.equals(SiteLetters.A_1)) {
+                if (isStopped) {
+                    seleniumHandler.stop();
+                    return;
+                }
                 seleniumHandler.openPage(ElementsConst.A_TICKETS);
                 Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1();
                 log.info("Tickets size: {}", tickets.size());
-                QuestionsParser questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
+                questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
                 questionList = questionsParser.iterateTickets();
+                if (isStopped) {
+                    seleniumHandler.stop();
+                    return;
+                }
                 log.info("Questions in ticket: {}", questionList.size());
                 saveToFile(questionList.isEmpty(), "A.1");
             } else {
@@ -65,11 +76,17 @@ public class CustomScrapperTest24 implements Scrapper {
         }
     }
 
+    public void stop() {
+        questionsParser.setStopped(true);
+        this.isStopped = true;
+    }
+
     @Override
     public String getStatus() {
         return status;
     }
 
+    @Override
     public void setStatus(String status) {
         this.status = status;
     }
