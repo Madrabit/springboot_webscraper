@@ -1,16 +1,16 @@
-package ru.madrabit.webscrapper_spring.selenium.test24;
+package ru.madrabit.webscrapper_spring.selenium.test24ru;
 
 import ru.madrabit.webscrapper_spring.selenium.Scrapper;
 import ru.madrabit.webscrapper_spring.selenium.TargetSite;
 import ru.madrabit.webscrapper_spring.selenium.consts.SiteLetters;
 
-public class Test24 implements TargetSite {
+public class Test24Ru implements TargetSite {
     private String status;
 
     private final Scrapper scraperForOne;
     private final AllScrapper scrapperForAll;
 
-    public Test24() {
+    public Test24Ru() {
         this.scraperForOne = new CustomScrapperTest24();
         this.scrapperForAll = new AllScrapper();
     }

@@ -1,10 +1,9 @@
-package ru.madrabit.webscrapper_spring.selenium.test24;
+package ru.madrabit.webscrapper_spring.selenium.test24su;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.madrabit.webscrapper_spring.selenium.Scrapper;
 import ru.madrabit.webscrapper_spring.selenium.UrlCrawler;
 import ru.madrabit.webscrapper_spring.selenium.config.SeleniumHandler;
-import ru.madrabit.webscrapper_spring.selenium.consts.ElementsConst;
 import ru.madrabit.webscrapper_spring.selenium.consts.SiteLetters;
 import ru.madrabit.webscrapper_spring.selenium.domen.Question;
 import ru.madrabit.webscrapper_spring.selenium.poi.CreateExcel;
@@ -36,13 +35,13 @@ public class CustomScrapperTest24 implements Scrapper {
 
             UrlCrawler urlCrawler = new UrlCrawlerImpl(seleniumHandler);
             if (letter.equals(SiteLetters.A_1)) {
+                seleniumHandler.openPage(ElementsConst.A_TICKETS);
+                Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1();
+                log.info("Tickets size: {}", tickets.size());
                 if (isStopped) {
                     seleniumHandler.stop();
                     return;
                 }
-                seleniumHandler.openPage(ElementsConst.A_TICKETS);
-                Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1();
-                log.info("Tickets size: {}", tickets.size());
                 questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
                 questionList = questionsParser.iterateTickets();
                 if (isStopped) {
@@ -55,10 +54,18 @@ public class CustomScrapperTest24 implements Scrapper {
                 letters = urlCrawler.scrapeLetters();
                 seleniumHandler.openPage(letters.get(letter));
                 Map<String, String> subTests = urlCrawler.scrapeSubTests();
+                if (isStopped) {
+                    seleniumHandler.stop();
+                    return;
+                }
                 Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
                 log.info("Tickets size: {}", tickets.size());
                 for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
                     QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey());
+                    if (isStopped) {
+                        seleniumHandler.stop();
+                        return;
+                    }
                     questionList = questionsParser.iterateTickets();
                     log.info("Questions in ticket: {}", questionList.size());
                     saveToFile(questionList.isEmpty(), entry.getKey());

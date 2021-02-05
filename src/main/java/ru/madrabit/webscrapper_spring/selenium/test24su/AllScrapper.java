@@ -1,4 +1,4 @@
-package ru.madrabit.webscrapper_spring.selenium.test24;
+package ru.madrabit.webscrapper_spring.selenium.test24su;
 
 import ru.madrabit.webscrapper_spring.selenium.Scrapper;
 import ru.madrabit.webscrapper_spring.selenium.consts.SiteLetters;

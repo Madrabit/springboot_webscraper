@@ -1,4 +1,4 @@
-package ru.madrabit.webscrapper_spring.selenium.test24;
+package ru.madrabit.webscrapper_spring.selenium.test24su;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;

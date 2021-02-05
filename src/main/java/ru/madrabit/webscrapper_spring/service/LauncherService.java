@@ -3,7 +3,7 @@ package ru.madrabit.webscrapper_spring.service;
 import org.springframework.stereotype.Service;
 import ru.madrabit.webscrapper_spring.selenium.TargetSite;
 import ru.madrabit.webscrapper_spring.selenium.consts.SiteLetters;
-import ru.madrabit.webscrapper_spring.selenium.test24.Test24;
+import ru.madrabit.webscrapper_spring.selenium.test24su.Test24Su;
 
 import java.util.Arrays;
 
@@ -13,7 +13,7 @@ public class LauncherService {
     private final TargetSite site;
 
     public LauncherService() {
-        this.site = new Test24();
+        this.site = new Test24Su();
     }
 
     public String executeByLetter(String letter) {

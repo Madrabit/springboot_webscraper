@@ -1,4 +1,4 @@
-package ru.madrabit.webscrapper_spring.selenium.test24;
+package ru.madrabit.webscrapper_spring.selenium.test24su;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -88,17 +88,17 @@ public class UrlCrawlerImpl implements UrlCrawler {
         String ROW_CHILD_3 = ".panel-grid.panel-no-style:nth-child(3)";
         WebElement firstRow = seleniumHandler.getElement(ROW_CHILD_2 + " > div > " + LINKS);
         WebElement secondRow = seleniumHandler.getElement(ROW_CHILD_3 + " > div > " + LINKS);
-        WebElement element = null;
+        WebElement elements = null;
         List<String> tickets = new ArrayList<>();
         if (firstRow.getText().contains("БИЛЕТ")) {
-            element = seleniumHandler.getElement(ROW_CHILD_2);
+            elements = seleniumHandler.getElement(ROW_CHILD_2);
         } else if (secondRow != null && secondRow.getText().contains("БИЛЕТ")) {
-            element = seleniumHandler.getElement(ROW_CHILD_3);
+            elements = seleniumHandler.getElement(ROW_CHILD_3);
         } else {
             log.error("Can't find row with tickets");
         }
-        if (element != null) {
-            tickets = element.findElements(By.cssSelector(LINKS)).stream().map(e -> e.getAttribute("href")).collect(toList());
+        if (elements != null) {
+            tickets = elements.findElements(By.cssSelector(LINKS)).stream().map(e -> e.getAttribute("href")).collect(toList());
         }
         return tickets;
     }
