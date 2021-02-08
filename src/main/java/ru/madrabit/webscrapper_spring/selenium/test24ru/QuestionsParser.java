@@ -43,11 +43,12 @@ public class QuestionsParser {
                 return null;
             }
             moveToUrl(ticket);
-            if (seleniumHandler.getElement(".entry-content")
-                    .getText().contains("Этот тест в настоящее время неактивен.")) {
-                return new ArrayList<>();
+            WebElement questionsForm = seleniumHandler.getElement(".container > div > form");
+            List<WebElement> questionsDiv = questionsForm.findElements(By.cssSelector(".card.flex-shrink-1.shadow"));
+            for (WebElement question : questionsDiv) {
+                question.findElement(By.cssSelector(".custom-control.custom-radio > label")).click();
             }
-            seleniumHandler.jumpToResult();
+            seleniumHandler.getElement(".btn.btn-primary").click();
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {

@@ -24,12 +24,14 @@ public class CustomScrapperTest24 implements Scrapper {
     private String status;
     private boolean isStopped;
     private QuestionsParser questionsParser;
+    List<Question> questionsList = new LinkedList<>();
+
 
     @Override
     public void work(SiteLetters letter) {
 
         status = "In process";
-        if (seleniumHandler.start(false)) {
+        if (seleniumHandler.start(true)) {
             isStopped = false;
             seleniumHandler.openPage(START_URL);
             log.info("Opened main page: {}", START_URL);
@@ -51,6 +53,13 @@ public class CustomScrapperTest24 implements Scrapper {
                 }
                 seleniumHandler.getElement(".btn.btn-primary").click();
                 questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
+                questionsList = questionsParser.iterateTickets();
+                if (isStopped) {
+                    seleniumHandler.stop();
+                    return;
+                }
+                log.info("Questions in ticket: {}", questionsList.size());
+                saveToFile(questionsList.isEmpty(), "A.1");
                 /*
                 WebElement answersSet = seleniumHandler.getElement("#item1 > div:nth-child(2) > div");
                 List<WebElement> answerDiv = answersSet.findElements(By.cssSelector(".card .flex-shrink-1"));
@@ -113,7 +122,7 @@ public class CustomScrapperTest24 implements Scrapper {
                 }
             }
              */
-//            seleniumHandler.stop();
+            seleniumHandler.stop();
         }
 
 
@@ -142,7 +151,7 @@ public class CustomScrapperTest24 implements Scrapper {
     private void saveToFile(boolean isEmpty, String letter) {
         if (!isEmpty) {
             CreateExcel excelDemo = new CreateExcel(letter);
-            excelDemo.createExcel(questionList);
+            excelDemo.createExcel(questionsList);
             status = "Finished";
         }
     }
