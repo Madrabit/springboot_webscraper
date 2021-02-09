@@ -23,17 +23,15 @@ public class UrlCrawlerImpl implements UrlCrawler {
 
     @Override
     public Map<Enum<SiteLetters>, String> scrapeLetters() {
-        Map<Enum<SiteLetters>, String> map = new HashMap<>();
-        List<WebElement> elements = seleniumHandler.getElement("#panel-1201-0-0-1 ").findElements(By.cssSelector(" a"));
-        elements.remove(0); // First one is uniq, should not parse in cycle.
-        elements.remove(elements.size() - 1); //remove excess last one test.
-        for (WebElement e : elements) {
-            String href = e.getAttribute("href");
-            try {
-                map.put(getTestNameFromUrl(href), href);
-            } catch (NoSuchLetterException nsl) {
-                log.error(nsl.getMessage(), nsl);
-            }
+        Map<Enum<SiteLetters>, String> map = new LinkedHashMap<>();
+
+        WebElement elements = seleniumHandler.getElement("#item1 > div > div");
+        List<WebElement> links = elements.findElements(By.cssSelector(" a"));
+        List<WebElement> text = elements.findElements(By.cssSelector(" a h4"));
+        for (WebElement link : links) {
+            String href = link.getAttribute("href");
+            String h4Text = link.getText();
+//            map.put(h4Text.substring(0, 7).replaceAll(" ", ""), href);
         }
         log.info("Letters collected: {}", map.size());
         return map;
@@ -42,15 +40,14 @@ public class UrlCrawlerImpl implements UrlCrawler {
     @Override
     public Map<String, String> scrapeSubTests() {
         Map<String, String> map = new LinkedHashMap<>();
-        for (WebElement e : seleniumHandler.getElement(".siteorigin-widget-tinymce.textwidget:nth-child(2)")
-                .findElements(By.cssSelector("div > blockquote > p > strong > a"))) {
-            String href = e.getAttribute("href");
-            if (href.contains("proverka")) break; // exclude last test, which doesn't need
-            try {
-                map.put(getTestNameFromTicketUrl(href), href);
-            } catch (NoSuchLetterException nsl) {
-                log.error(nsl.getMessage(), nsl);
-            }
+
+        WebElement elements = seleniumHandler.getElement("#item1 > div > div");
+        List<WebElement> links = elements.findElements(By.cssSelector(" a"));
+        List<WebElement> text = elements.findElements(By.cssSelector(" a h4"));
+        for (WebElement link : links) {
+            String href = link.getAttribute("href");
+            String h4Text = link.getText();
+            map.put(h4Text.substring(0, 7).replaceAll(" ", ""), href);
         }
         log.info("Second lvl Letters collected: {}", map.size());
         return map;
@@ -116,9 +113,6 @@ public class UrlCrawlerImpl implements UrlCrawler {
             case "b":
                 result = "B_" + splitted[1];
                 break;
-            case "d":
-                result = "D";
-                break;
             default:
                 throw new NoSuchLetterException("Wrong Letter selected");
         }
@@ -126,7 +120,7 @@ public class UrlCrawlerImpl implements UrlCrawler {
     }
 
     private String getTestNameFromTicketUrl(String url) throws NoSuchLetterException {
-        String s = url.substring(19);
+        String s = url.substring(0, 7).replaceAll(" ", "");
         String[] splitted = s.split("-");
         String result = "";
         switch (splitted[0]) {

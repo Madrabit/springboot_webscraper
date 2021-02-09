@@ -19,13 +19,10 @@ public class CustomScrapperTest24 implements Scrapper {
     public static final String START_URL = "https://tests24.ru/?iter=1&s_group=1";
 
     private SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
-    List<Question> questionList = new LinkedList<>();
-    Map<Enum<SiteLetters>, String> letters = new HashMap<>();
+    private List<Question> questionsList = new LinkedList<>();
     private String status;
     private boolean isStopped;
     private QuestionsParser questionsParser;
-    List<Question> questionsList = new LinkedList<>();
-
 
     @Override
     public void work(SiteLetters letter) {
@@ -60,54 +57,18 @@ public class CustomScrapperTest24 implements Scrapper {
                 }
                 log.info("Questions in ticket: {}", questionsList.size());
                 saveToFile(questionsList.isEmpty(), "A.1");
-                /*
-                WebElement answersSet = seleniumHandler.getElement("#item1 > div:nth-child(2) > div");
-                List<WebElement> answerDiv = answersSet.findElements(By.cssSelector(".card .flex-shrink-1"));
-                for (WebElement element : answerDiv) {
-                    WebElement questions = element.findElement(By.cssSelector("i"));
-                    System.out.println(questions.getText().substring(5).trim());
-                    List<WebElement> spans = element.findElements(By.cssSelector(".f_sm"));
-                    for (WebElement span : spans) {
-                        if (!span.getCssValue("color").isEmpty() && checkRgba(span.getCssValue("color"))) {
-                            System.out.println(span.getText() + " Верный");
-                        } else {
-                            System.out.println(span.getText());
-                        }
-                    }
-
-                }
-
-
-
-                List<WebElement> answerDiv = answersSet.findElements(By.cssSelector(".card .flex-shrink-1"));
-                for (WebElement answer : answerDiv) {
-                    List<WebElement> spans = answer.findElements(By.cssSelector(".f_sm"));
-                    for (WebElement span : spans) {
-                        if (!span.getCssValue("color").isEmpty() && checkRgba(span.getCssValue("color"))) {
-                            System.out.println(span.getText());
-                        }
-                    }
-                }
-
-                 */
-
-//                questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
-//                questionList = questionsParser.iterateTickets();
-//                if (isStopped) {
-//                    seleniumHandler.stop();
-//                    return;
-//                }
-//                log.info("Questions in ticket: {}", questionList.size());
-//                saveToFile(questionList.isEmpty(), "A.1");
-            } /*
-            else {
-                letters = urlCrawler.scrapeLetters();
+            } else {
+                Map<Enum<SiteLetters>, String> letters = urlCrawler.scrapeLetters();
                 seleniumHandler.openPage(letters.get(letter));
+
+//                seleniumHandler.openPage("https://tests24.ru/?iter=2&group=11");
+
                 Map<String, String> subTests = urlCrawler.scrapeSubTests();
                 if (isStopped) {
                     seleniumHandler.stop();
                     return;
                 }
+
                 Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
                 log.info("Tickets size: {}", tickets.size());
                 for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
@@ -116,12 +77,12 @@ public class CustomScrapperTest24 implements Scrapper {
                         seleniumHandler.stop();
                         return;
                     }
-                    questionList = questionsParser.iterateTickets();
-                    log.info("Questions in ticket: {}", questionList.size());
-                    saveToFile(questionList.isEmpty(), entry.getKey());
+                    questionsList = questionsParser.iterateTickets();
+                    log.info("Questions in ticket: {}", questionsList.size());
+                    saveToFile(questionsList.isEmpty(), entry.getKey());
                 }
             }
-             */
+
             seleniumHandler.stop();
         }
 

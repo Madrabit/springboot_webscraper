@@ -9,7 +9,7 @@ public class Main {
         TargetSite site = new Test24Ru();
 
         Thread scrapThread = new Thread(() -> {
-            site.scrapeOneLetter(SiteLetters.A_1);
+            site.scrapeOneLetter(SiteLetters.B_1);
         });
 
 //        Thread statusThread = new Thread(() -> {
