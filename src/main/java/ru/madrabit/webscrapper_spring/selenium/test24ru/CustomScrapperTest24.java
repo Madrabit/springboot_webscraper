@@ -61,8 +61,6 @@ public class CustomScrapperTest24 implements Scrapper {
                 Map<Enum<SiteLetters>, String> letters = urlCrawler.scrapeLetters();
                 seleniumHandler.openPage(letters.get(letter));
 
-//                seleniumHandler.openPage("https://tests24.ru/?iter=2&group=11");
-
                 Map<String, String> subTests = urlCrawler.scrapeSubTests();
                 if (isStopped) {
                     seleniumHandler.stop();

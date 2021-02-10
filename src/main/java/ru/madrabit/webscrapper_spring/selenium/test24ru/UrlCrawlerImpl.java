@@ -31,10 +31,28 @@ public class UrlCrawlerImpl implements UrlCrawler {
         for (WebElement link : links) {
             String href = link.getAttribute("href");
             String h4Text = link.getText();
-//            map.put(h4Text.substring(0, 7).replaceAll(" ", ""), href);
+            map.put(h4Cutter(h4Text), href);
         }
         log.info("Letters collected: {}", map.size());
         return map;
+    }
+
+    private SiteLetters h4Cutter(String h4) {
+        String letter = h4.substring(0, 1);
+        String num = h4.substring(1, 3).trim();
+        String result = "";
+        if ("А".equals(letter)) {
+            result = "A_1";
+        } else if ("Б".equals(letter)) {
+            result = "B_" + num;
+        } else {
+            try {
+                throw new NoSuchLetterException("Wrong Letter selected");
+            } catch (NoSuchLetterException e) {
+                e.printStackTrace();
+            }
+        }
+        return SiteLetters.valueOf(result);
     }
 
     @Override
