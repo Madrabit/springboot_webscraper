@@ -3,7 +3,8 @@ package ru.madrabit.webscraper_spring.selenium.test24Su;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import ru.madrabit.webscraper_spring.selenium.UrlCrawler;
+import ru.madrabit.webscraper_spring.selenium.ScrapeTickets;
+import ru.madrabit.webscraper_spring.selenium.UrlCrawlerBase;
 import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper_spring.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper_spring.selenium.exceptions.NoSuchLetterException;
@@ -13,12 +14,10 @@ import java.util.*;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
-public class UrlCrawlerImpl implements UrlCrawler {
-
-    private final SeleniumHandler seleniumHandler;
+public class UrlCrawlerImpl extends UrlCrawlerBase {
 
     public UrlCrawlerImpl(SeleniumHandler seleniumHandler) {
-        this.seleniumHandler = seleniumHandler;
+        super(seleniumHandler);
     }
 
     @Override
@@ -57,24 +56,7 @@ public class UrlCrawlerImpl implements UrlCrawler {
     }
 
     @Override
-    public Map<String, List<String>> getTicketsUrl(Map<String, String> subTests) {
-        Map<String, List<String>> tickets = new HashMap<>();
-        for (Map.Entry<String, String> entry : subTests.entrySet()) {
-
-
-            moveToUrl(entry.getValue());
-//            String id = getTestNameFromUrl(subTests.get(j));
-            List<String> ticketsList = scrapeTickets();
-
-//            log.info("Tickets collected: {}", ticketsList.size());
-            tickets.put(entry.getKey(), ticketsList);
-        }
-        log.info("Tickets collected: {}", tickets.size());
-        return tickets;
-    }
-
-    @Override
-    public Map<String, List<String>> getTicketsUrlForA1() {
+    public Map<String, List<String>> getTicketsUrlForA1(ScrapeTickets scrapeTickets) {
         Map<String, List<String>> tickets = new HashMap<>();
         List<String> ticketsList = scrapeTickets();
         tickets.put("A.1", ticketsList);
@@ -101,14 +83,6 @@ public class UrlCrawlerImpl implements UrlCrawler {
             tickets = elements.findElements(By.cssSelector(LINKS)).stream().map(e -> e.getAttribute("href")).collect(toList());
         }
         return tickets;
-    }
-
-    public void moveToUrl(String url) {
-        try {
-            seleniumHandler.openPage(url);
-        } catch (Exception e) {
-            log.error("Can't click element: {}", url);
-        }
     }
 
     private static Enum<SiteLetters> getTestNameFromUrl(String url) throws NoSuchLetterException {

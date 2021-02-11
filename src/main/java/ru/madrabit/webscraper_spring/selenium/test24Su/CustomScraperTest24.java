@@ -1,100 +1,69 @@
 package ru.madrabit.webscraper_spring.selenium.test24Su;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.madrabit.webscraper_spring.selenium.Scraper;
+import ru.madrabit.webscraper_spring.selenium.CustomScraperBase;
 import ru.madrabit.webscraper_spring.selenium.UrlCrawler;
-import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper_spring.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
-import ru.madrabit.webscraper_spring.selenium.poi.CreateExcel;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class CustomScraperTest24 implements Scraper {
+public class CustomScraperTest24 extends CustomScraperBase {
 
-    public static final String START_URL = "https://tests24.su/test-24/promyshlennaya-bezopasnost/";
+    private final UrlCrawler urlCrawler;
 
-    private SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
-    List<Question> questionList = new LinkedList<>();
-    Map<Enum<SiteLetters>, String> letters = new HashMap<>();
-    private String status;
-    private boolean isStopped;
-    private QuestionsParser questionsParser;
+    public CustomScraperTest24() {
+        super("https://tests24.su/test-24/promyshlennaya-bezopasnost/");
+        this.urlCrawler = new UrlCrawlerImpl(seleniumHandler);
+    }
 
-    @Override
-    public void work(SiteLetters letter) {
-        status = "In process";
-        if (seleniumHandler.start(true)) {
-            isStopped = false;
-            seleniumHandler.openPage(START_URL);
-            log.info("Opened main page: {}", START_URL);
-            UrlCrawler urlCrawler = new UrlCrawlerImpl(seleniumHandler);
-
-            if (letter.equals(SiteLetters.A_1)) {
-                seleniumHandler.openPage(ElementsConst.A_TICKETS);
-                Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1();
-                log.info("Tickets size: {}", tickets.size());
-                if (isStopped) {
-                    seleniumHandler.stop();
-                    return;
-                }
-                questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
-                questionList = questionsParser.iterateTickets();
-                if (isStopped) {
-                    seleniumHandler.stop();
-                    return;
-                }
-                log.info("Questions in ticket: {}", questionList.size());
-                saveToFile(questionList.isEmpty(), "A.1");
-            } else {
-                letters = urlCrawler.scrapeLetters();
-                seleniumHandler.openPage(letters.get(letter));
-                Map<String, String> subTests = urlCrawler.scrapeSubTests();
-                if (isStopped) {
-                    seleniumHandler.stop();
-                    return;
-                }
-                Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
-                log.info("Tickets size: {}", tickets.size());
-                for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
-                    QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey());
-                    if (isStopped) {
-                        seleniumHandler.stop();
-                        return;
-                    }
-                    questionList = questionsParser.iterateTickets();
-                    log.info("Questions in ticket: {}", questionList.size());
-                    saveToFile(questionList.isEmpty(), entry.getKey());
-                }
-            }
+    public boolean workLetters(SiteLetters letter) {
+        Map<Enum<SiteLetters>, String> letters = urlCrawler.scrapeLetters();
+        seleniumHandler.openPage(letters.get(letter));
+        Map<String, String> subTests = urlCrawler.scrapeSubTests();
+        if (isStopped) {
             seleniumHandler.stop();
+            return true;
         }
-    }
-
-    private void saveToFile(boolean isEmpty, String letter) {
-        if (!isEmpty) {
-            CreateExcel excelDemo = new CreateExcel(letter);
-            excelDemo.createExcel(questionList);
-            status = "Finished";
+        Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
+        log.info("Tickets size: {}", tickets.size());
+        for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
+            QuestionsParserImpl questionsParserImpl = new QuestionsParserImpl(entry.getValue(), entry.getKey());
+            if (isStopped) {
+                seleniumHandler.stop();
+                return true;
+            }
+            List<Question> questionsList = getQuestions(questionsParserImpl);
+            saveToFile(questionsList, questionsList.isEmpty(), entry.getKey());
         }
+        return false;
     }
 
-    public void stop() {
-        questionsParser.setStopped(true);
-        this.isStopped = true;
+    public boolean workA() {
+        seleniumHandler.openPage(ElementsConst.A_TICKETS);
+        if (isStopped) {
+            seleniumHandler.stop();
+            return true;
+        }
+        Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1(scrapeTickets);
+        log.info("Tickets size: {}", tickets.size());
+        QuestionsParserImpl questionsParserImpl = new QuestionsParserImpl(tickets.get("A.1"), "A.1");
+        if (isStopped) {
+            seleniumHandler.stop();
+            return true;
+        }
+        List<Question> questionsList = getQuestions(questionsParserImpl);
+        saveToFile(questionsList, questionsList.isEmpty(), "A.1");
+        return false;
     }
 
-    @Override
-    public String getStatus() {
-        return status;
+    private List<Question> getQuestions(QuestionsParserImpl questionsParserImpl) {
+        List<Question> questionsList = questionsParserImpl.iterateTickets();
+        log.info("Questions in ticket: {}", questionsList.size());
+        return questionsList;
     }
 
-    @Override
-    public void setStatus(String status) {
-        this.status = status;
-    }
+
 }

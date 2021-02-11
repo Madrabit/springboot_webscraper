@@ -3,7 +3,7 @@ package ru.madrabit.webscraper_spring.selenium.test24Ru;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
+import ru.madrabit.webscraper_spring.selenium.QuestionsParserBase;
 import ru.madrabit.webscraper_spring.selenium.domen.Answer;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
 
@@ -12,24 +12,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
-public class QuestionsParser {
-    private int questionSerial;
-    private final SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
-    private final List<String> ticketsList;
-    private final String id;
-    private boolean isStopped;
+public class QuestionsParserImpl extends QuestionsParserBase {
 
-    public QuestionsParser(List<String> ticketsList, String id) {
-        this.ticketsList = ticketsList;
-        this.id = id;
-    }
 
-    private void moveToUrl(String url) {
-        try {
-            seleniumHandler.openPage(url);
-        } catch (Exception e) {
-            log.error("Can't click element: {}", url);
-        }
+    public QuestionsParserImpl(List<String> ticketsList, String id) {
+        super(ticketsList, id);
     }
 
     public List<Question> iterateTickets() {
@@ -41,12 +28,7 @@ public class QuestionsParser {
                 return null;
             }
             moveToUrl(ticket);
-            WebElement questionsForm = seleniumHandler.getElement(".container > div > form");
-            List<WebElement> questionsDiv = questionsForm.findElements(By.cssSelector(".card.flex-shrink-1.shadow"));
-            for (WebElement question : questionsDiv) {
-                question.findElement(By.cssSelector(".custom-control.custom-radio > label")).click();
-            }
-            seleniumHandler.getElement(".btn.btn-primary").click();
+            autoPassing();
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
@@ -57,8 +39,23 @@ public class QuestionsParser {
         return questionList;
     }
 
-    public void setQuestionSerial(int questionSerial) {
-        this.questionSerial = questionSerial;
+    public void autoPassing() {
+        WebElement questionsForm = seleniumHandler.getElement(".container > div > form");
+        List<WebElement> questionsDiv = questionsForm.findElements(By.cssSelector(".card.flex-shrink-1.shadow"));
+        for (WebElement question : questionsDiv) {
+            question.findElement(By.cssSelector(".custom-control.custom-radio > label")).click();
+        }
+        seleniumHandler.getElement(".btn.btn-primary").click();
+    }
+
+    public List<Question> getAllQuestions(String id) {
+        WebElement main = seleniumHandler.getElement("#item1 > div:nth-child(2) > div");
+        List<Question> list = new ArrayList<>();
+        for (WebElement questionDiv : main.findElements((By.cssSelector(".card .flex-shrink-1")))) {
+            Question question = parseQuestion(questionDiv, id);
+            list.add(question);
+        }
+        return list;
     }
 
     private boolean checkRgba(String rgba) {
@@ -91,21 +88,4 @@ public class QuestionsParser {
         return question;
     }
 
-    private List<Question> getAllQuestions(String id) {
-        WebElement main = seleniumHandler.getElement("#item1 > div:nth-child(2) > div");
-        List<Question> list = new ArrayList<>();
-        for (WebElement questionDiv : main.findElements((By.cssSelector(".card .flex-shrink-1")))) {
-            Question question = parseQuestion(questionDiv, id);
-            list.add(question);
-        }
-        return list;
-    }
-
-    public boolean isStopped() {
-        return isStopped;
-    }
-
-    public void setStopped(boolean stopped) {
-        isStopped = stopped;
-    }
 }

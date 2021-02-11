@@ -3,7 +3,7 @@ package ru.madrabit.webscraper_spring.selenium.test24Su;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
+import ru.madrabit.webscraper_spring.selenium.QuestionsParserBase;
 import ru.madrabit.webscraper_spring.selenium.domen.Answer;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
 
@@ -14,24 +14,10 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
-public class QuestionsParser {
-    private int questionSerial;
-    private final SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
-    private final List<String> ticketsList;
-    private final String id;
-    private boolean isStopped;
+public class QuestionsParserImpl extends QuestionsParserBase {
 
-    public QuestionsParser(List<String> ticketsList, String id) {
-        this.ticketsList = ticketsList;
-        this.id = id;
-    }
-
-    private void moveToUrl(String url) {
-        try {
-            seleniumHandler.openPage(url);
-        } catch (Exception e) {
-            log.error("Can't click element: {}", url);
-        }
+    public QuestionsParserImpl(List<String> ticketsList, String id) {
+        super(ticketsList, id);
     }
 
     public List<Question> iterateTickets() {
@@ -58,8 +44,10 @@ public class QuestionsParser {
         return questionList;
     }
 
-    public void setQuestionSerial(int questionSerial) {
-        this.questionSerial = questionSerial;
+    public List<Question> getAllQuestions(String id) {
+        WebElement main = seleniumHandler.getElement(".entry-content");
+        return main.findElements((By.cssSelector(".watupro-choices-columns")))
+                .stream().map(questionDiv -> parseQuestion(questionDiv, id)).collect(toList());
     }
 
     private Question parseQuestion(WebElement questionDiv, String id) {
@@ -85,19 +73,5 @@ public class QuestionsParser {
             question.getAnswerSet().add(answer);
         }
         return question;
-    }
-
-    private List<Question> getAllQuestions(String id) {
-        WebElement main = seleniumHandler.getElement(".entry-content");
-        return main.findElements((By.cssSelector(".watupro-choices-columns")))
-                .stream().map(questionDiv -> parseQuestion(questionDiv, id)).collect(toList());
-    }
-
-    public boolean isStopped() {
-        return isStopped;
-    }
-
-    public void setStopped(boolean stopped) {
-        isStopped = stopped;
     }
 }

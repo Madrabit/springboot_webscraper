@@ -12,5 +12,5 @@ public interface UrlCrawler {
 
     Map<String, List<String>> getTicketsUrl(Map<String, String> subTests);
 
-    Map<String, List<String>> getTicketsUrlForA1();
+    Map<String, List<String>> getTicketsUrlForA1(ScrapeTickets scrapeTickets);
 }
