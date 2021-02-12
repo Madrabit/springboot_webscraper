@@ -6,11 +6,16 @@ import ru.madrabit.webscraper_spring.selenium.test24Su.Test24Su;
 
 public class Main {
     public static void main(String[] args) {
-        SiteBase site = new Test24Su();
+        SiteBase test24Su = new Test24Su();
+        SiteBase test24Ru = new Test24Ru();
 
-        Thread scrapThread = new Thread(() -> {
-            site.scrapeOneLetter(SiteLetters.A_1);
+        Thread test24SuThread = new Thread(() -> {
+            test24Su.scrapeOneLetter(SiteLetters.A_1);
         });
+
+//        Thread test24RuThread = new Thread(() -> {
+//            test24Ru.scrapeOneLetter(SiteLetters.A_1);
+//        });
 
 //        Thread statusThread = new Thread(() -> {
 //            try {
@@ -22,7 +27,8 @@ public class Main {
 //                e.printStackTrace();
 //            }
 //        });
-        scrapThread.start();
+        test24SuThread.start();
+//        test24RuThread.start();
 //        statusThread.start();
     }
 }

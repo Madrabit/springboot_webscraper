@@ -1,4 +1,4 @@
-package ru.madrabit.webscraper_spring.selenium.test24Ru;
+package ru.madrabit.webscraper_spring.selenium.test24Su;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Slf4j
-public class QuestionsParserImpl extends QuestionsParserBase {
+public class QuestionsParser extends QuestionsParserBase {
 
-
-    public QuestionsParserImpl(List<String> ticketsList, String id) {
+    public QuestionsParser(List<String> ticketsList, String id) {
         super(ticketsList, id);
     }
 
@@ -28,7 +29,11 @@ public class QuestionsParserImpl extends QuestionsParserBase {
                 return null;
             }
             moveToUrl(ticket);
-            autoPassing();
+            if (seleniumHandler.getElement(".entry-content")
+                    .getText().contains("Этот тест в настоящее время неактивен.")) {
+                return new ArrayList<>();
+            }
+            seleniumHandler.jumpToResult();
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
@@ -39,28 +44,10 @@ public class QuestionsParserImpl extends QuestionsParserBase {
         return questionList;
     }
 
-    public void autoPassing() {
-        WebElement questionsForm = seleniumHandler.getElement(".container > div > form");
-        List<WebElement> questionsDiv = questionsForm.findElements(By.cssSelector(".card.flex-shrink-1.shadow"));
-        for (WebElement question : questionsDiv) {
-            question.findElement(By.cssSelector(".custom-control.custom-radio > label")).click();
-        }
-        seleniumHandler.getElement(".btn.btn-primary").click();
-    }
-
     public List<Question> getAllQuestions(String id) {
-        WebElement main = seleniumHandler.getElement("#item1 > div:nth-child(2) > div");
-        List<Question> list = new ArrayList<>();
-        for (WebElement questionDiv : main.findElements((By.cssSelector(".card .flex-shrink-1")))) {
-            Question question = parseQuestion(questionDiv, id);
-            list.add(question);
-        }
-        return list;
-    }
-
-    private boolean checkRgba(String rgba) {
-        String[] arr = rgba.substring(5).split(",");
-        return Integer.parseInt(arr[0]) < 120 && Integer.parseInt(arr[1].trim()) > 120;
+        WebElement main = seleniumHandler.getElement(".entry-content");
+        return main.findElements((By.cssSelector(".watupro-choices-columns")))
+                .stream().map(questionDiv -> parseQuestion(questionDiv, id)).collect(toList());
     }
 
     private Question parseQuestion(WebElement questionDiv, String id) {
@@ -70,16 +57,16 @@ public class QuestionsParserImpl extends QuestionsParserBase {
         }
         Question question = new Question(
                 id + "-" + ++questionSerial,
-                questionDiv.findElement(By.cssSelector("i")).getText().substring(5).trim()
+                questionDiv.findElement(By.cssSelector(".show-question-content")).getText()
         );
-        List<WebElement> answers = questionDiv.findElements(By.cssSelector(".f_sm"));
+        List<WebElement> answers = questionDiv.findElements(By.cssSelector(".show-question-choices > ul > li"));
         int serial = 0;
         for (WebElement webElem : answers) {
             Answer answer = new Answer(++serial, webElem.getText(), question.getId());
-            if (!webElem.getCssValue("color").isEmpty() && checkRgba(webElem.getCssValue("color"))) {
+            if (webElem.getAttribute("class").contains("correct-answer")) {
                 answer.setRight(true);
                 question.getAnswerNumber().add(serial);
-                answer.setText(webElem.getText());
+                answer.setText(webElem.findElement(By.tagName("span")).getText());
             } else {
                 answer.setText(webElem.getText());
             }
@@ -87,5 +74,4 @@ public class QuestionsParserImpl extends QuestionsParserBase {
         }
         return question;
     }
-
 }

@@ -5,8 +5,7 @@ import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper_spring.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
 import ru.madrabit.webscraper_spring.selenium.poi.CreateExcel;
-import ru.madrabit.webscraper_spring.selenium.test24Ru.QuestionsParserImpl;
-import ru.madrabit.webscraper_spring.selenium.test24Su.UrlCrawlerImpl;
+import ru.madrabit.webscraper_spring.selenium.test24Ru.QuestionsParser;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public abstract class CustomScraperBase implements Scraper {
     public SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
     public String status;
     public boolean isStopped;
-    public QuestionsParserImpl questionsParserImpl;
+    public QuestionsParser questionsParser;
 
     public CustomScraperBase(String START_URL) {
         this.START_URL = START_URL;
@@ -53,7 +52,7 @@ public abstract class CustomScraperBase implements Scraper {
     }
 
     public void stop() {
-        questionsParserImpl.setStopped(true);
+        questionsParser.setStopped(true);
         this.isStopped = true;
     }
 

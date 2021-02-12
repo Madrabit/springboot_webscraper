@@ -2,7 +2,7 @@ package ru.madrabit.webscraper_spring.selenium.test24Su;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.madrabit.webscraper_spring.selenium.CustomScraperBase;
-import ru.madrabit.webscraper_spring.selenium.UrlCrawler;
+import ru.madrabit.webscraper_spring.selenium.consts.ElementsConstTest24Su;
 import ru.madrabit.webscraper_spring.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
 
@@ -12,11 +12,11 @@ import java.util.Map;
 @Slf4j
 public class CustomScraperTest24 extends CustomScraperBase {
 
-    private final UrlCrawler urlCrawler;
+    private final ru.madrabit.webscraper_spring.selenium.UrlCrawler urlCrawler;
 
     public CustomScraperTest24() {
         super("https://tests24.su/test-24/promyshlennaya-bezopasnost/");
-        this.urlCrawler = new UrlCrawlerImpl(seleniumHandler);
+        this.urlCrawler = new UrlCrawler(seleniumHandler);
     }
 
     public boolean workLetters(SiteLetters letter) {
@@ -30,37 +30,38 @@ public class CustomScraperTest24 extends CustomScraperBase {
         Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
         log.info("Tickets size: {}", tickets.size());
         for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
-            QuestionsParserImpl questionsParserImpl = new QuestionsParserImpl(entry.getValue(), entry.getKey());
+            QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey());
             if (isStopped) {
                 seleniumHandler.stop();
                 return true;
             }
-            List<Question> questionsList = getQuestions(questionsParserImpl);
+            List<Question> questionsList = getQuestions(questionsParser);
             saveToFile(questionsList, questionsList.isEmpty(), entry.getKey());
         }
         return false;
     }
 
     public boolean workA() {
-        seleniumHandler.openPage(ElementsConst.A_TICKETS);
+        seleniumHandler.openPage(ElementsConstTest24Su.A_TICKETS);
         if (isStopped) {
             seleniumHandler.stop();
             return true;
         }
+        List<String> scrapeTickets = urlCrawler.scrapeTickets();
         Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1(scrapeTickets);
         log.info("Tickets size: {}", tickets.size());
-        QuestionsParserImpl questionsParserImpl = new QuestionsParserImpl(tickets.get("A.1"), "A.1");
+        QuestionsParser questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
         if (isStopped) {
             seleniumHandler.stop();
             return true;
         }
-        List<Question> questionsList = getQuestions(questionsParserImpl);
+        List<Question> questionsList = getQuestions(questionsParser);
         saveToFile(questionsList, questionsList.isEmpty(), "A.1");
         return false;
     }
 
-    private List<Question> getQuestions(QuestionsParserImpl questionsParserImpl) {
-        List<Question> questionsList = questionsParserImpl.iterateTickets();
+    private List<Question> getQuestions(QuestionsParser questionsParser) {
+        List<Question> questionsList = questionsParser.iterateTickets();
         log.info("Questions in ticket: {}", questionsList.size());
         return questionsList;
     }

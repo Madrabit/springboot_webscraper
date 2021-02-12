@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import ru.madrabit.webscraper_spring.selenium.CustomScraperBase;
 import ru.madrabit.webscraper_spring.selenium.ScrapeTickets;
-import ru.madrabit.webscraper_spring.selenium.UrlCrawler;
+import ru.madrabit.webscraper_spring.selenium.consts.ElementsConstTest24Ru;
 import ru.madrabit.webscraper_spring.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
 
@@ -18,15 +18,16 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class CustomScraperTest24 extends CustomScraperBase {
 
-    private final UrlCrawler urlCrawler;
+    private final ru.madrabit.webscraper_spring.selenium.UrlCrawler urlCrawler;
 
     public CustomScraperTest24() {
         super("https://tests24.ru/?iter=1&s_group=1");
-        this.urlCrawler = new UrlCrawlerImpl(seleniumHandler);
+        this.urlCrawler = new UrlCrawler(seleniumHandler);
     }
 
     public boolean workA() {
-        seleniumHandler.openPage(ElementsConst.A_TICKETS);
+        seleniumHandler.openPage(ElementsConstTest24Ru.A_TICKETS);
+
         ScrapeTickets scrapeTickets = () -> {
             String LINKS = ".col-6.col-sm-6.col-md-3.col-lg-2 a";
             String ROW_WITH_TICKETS = ".row.text-center";
@@ -38,20 +39,22 @@ public class CustomScraperTest24 extends CustomScraperBase {
             }
             return tickets;
         };
-        Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1(scrapeTickets);
+        List<String> ticketsScraper = urlCrawler.scrapeTickets();
+        Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1(ticketsScraper);
+
         log.info("Tickets size: {}", tickets.size());
         if (isStopped) {
             seleniumHandler.stop();
             return true;
         }
         seleniumHandler.openPage("https://tests24.ru/?iter=4&bil=1&test=726");
-        QuestionsParserImpl questionsParserImpl = new QuestionsParserImpl(tickets.get("A.1"), "A.1");
-        questionsParserImpl.autoPassing();
+        QuestionsParser questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
+        questionsParser.autoPassing();
         if (isStopped) {
             seleniumHandler.stop();
             return true;
         }
-        List<Question> questionsList = getQuestions(questionsParserImpl);
+        List<Question> questionsList = getQuestions(questionsParser);
         saveToFile(questionsList, questionsList.isEmpty(), "A.1");
         return false;
     }
@@ -67,19 +70,19 @@ public class CustomScraperTest24 extends CustomScraperBase {
         Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
         log.info("Tickets size: {}", tickets.size());
         for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
-            QuestionsParserImpl questionsParserImpl = new QuestionsParserImpl(entry.getValue(), entry.getKey());
+            QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey());
             if (isStopped) {
                 seleniumHandler.stop();
                 return true;
             }
-            List<Question> questionsList = getQuestions(questionsParserImpl);
+            List<Question> questionsList = getQuestions(questionsParser);
             saveToFile(questionsList, questionsList.isEmpty(), entry.getKey());
         }
         return false;
     }
 
-    private List<Question> getQuestions(QuestionsParserImpl questionsParserImpl) {
-        List<Question> questionsList = questionsParserImpl.iterateTickets();
+    private List<Question> getQuestions(QuestionsParser questionsParser) {
+        List<Question> questionsList = questionsParser.iterateTickets();
         log.info("Questions in ticket: {}", questionsList.size());
         return questionsList;
     }

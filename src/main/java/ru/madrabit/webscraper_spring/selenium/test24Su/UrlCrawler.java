@@ -3,7 +3,6 @@ package ru.madrabit.webscraper_spring.selenium.test24Su;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import ru.madrabit.webscraper_spring.selenium.ScrapeTickets;
 import ru.madrabit.webscraper_spring.selenium.UrlCrawlerBase;
 import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper_spring.selenium.consts.SiteLetters;
@@ -14,9 +13,9 @@ import java.util.*;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
-public class UrlCrawlerImpl extends UrlCrawlerBase {
+public class UrlCrawler extends UrlCrawlerBase {
 
-    public UrlCrawlerImpl(SeleniumHandler seleniumHandler) {
+    public UrlCrawler(SeleniumHandler seleniumHandler) {
         super(seleniumHandler);
     }
 
@@ -55,16 +54,7 @@ public class UrlCrawlerImpl extends UrlCrawlerBase {
         return map;
     }
 
-    @Override
-    public Map<String, List<String>> getTicketsUrlForA1(ScrapeTickets scrapeTickets) {
-        Map<String, List<String>> tickets = new HashMap<>();
-        List<String> ticketsList = scrapeTickets();
-        tickets.put("A.1", ticketsList);
-        log.info("Tickets A.1 collected and size is: {}", ticketsList.size());
-        return tickets;
-    }
-
-    private List<String> scrapeTickets() {
+    public List<String> scrapeTickets() {
         String LINKS = "div p a ";
         String ROW_CHILD_2 = ".panel-grid.panel-no-style:nth-child(2)";
         String ROW_CHILD_3 = ".panel-grid.panel-no-style:nth-child(3)";

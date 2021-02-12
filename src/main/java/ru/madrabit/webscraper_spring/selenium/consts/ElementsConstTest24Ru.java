@@ -1,6 +1,6 @@
-package ru.madrabit.webscraper_spring.selenium.test24Ru;
+package ru.madrabit.webscraper_spring.selenium.consts;
 
-public class ElementsConst {
+public class ElementsConstTest24Ru {
     public static final String TEST_A = "p:nth-child(1) > strong > a";
     public static String TEST_B = "p:nth-child(3) > strong > a";
     public static String A_1 = "strong > a:nth-child(3)";

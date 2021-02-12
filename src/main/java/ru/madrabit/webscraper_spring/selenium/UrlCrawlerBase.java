@@ -39,25 +39,15 @@ public abstract class UrlCrawlerBase implements UrlCrawler {
     }
 
     @Override
-    public Map<String, List<String>> getTicketsUrlForA1(ScrapeTickets scrapeTickets) {
+    public Map<String, List<String>> getTicketsUrlForA1(List<String> ticketsList) {
         Map<String, List<String>> tickets = new HashMap<>();
-        List<String> ticketsList = scrapeTickets();
+//        List<String> ticketsList = scrapeTickets();
         tickets.put("A.1", ticketsList);
         log.info("Tickets A.1 collected and size is: {}", ticketsList.size());
         return tickets;
     }
 
-    private List<String> scrapeTickets() {
-        String LINKS = ".col-6.col-sm-6.col-md-3.col-lg-2 a";
-        String ROW_WITH_TICKETS = ".row.text-center";
-        WebElement elements = null;
-        List<String> tickets = new ArrayList<>();
-        elements = seleniumHandler.getElement(ROW_WITH_TICKETS);
-        if (elements != null) {
-            tickets = elements.findElements(By.cssSelector(LINKS)).stream().map(e -> e.getAttribute("href")).collect(toList());
-        }
-        return tickets;
-    }
+    public abstract List<String> scrapeTickets();
 
     public void moveToUrl(String url) {
         try {
