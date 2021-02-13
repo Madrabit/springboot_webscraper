@@ -2,6 +2,7 @@ package ru.madrabit.webscraper_spring.selenium.test24Su;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.madrabit.webscraper_spring.selenium.CustomScraperBase;
+import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper_spring.selenium.consts.ElementsConstTest24Su;
 import ru.madrabit.webscraper_spring.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
@@ -14,8 +15,8 @@ public class CustomScraperTest24 extends CustomScraperBase {
 
     private final ru.madrabit.webscraper_spring.selenium.UrlCrawler urlCrawler;
 
-    public CustomScraperTest24() {
-        super("https://tests24.su/test-24/promyshlennaya-bezopasnost/");
+    public CustomScraperTest24(SeleniumHandler seleniumHandler) {
+        super("https://tests24.su/test-24/promyshlennaya-bezopasnost/", seleniumHandler);
         this.urlCrawler = new UrlCrawler(seleniumHandler);
     }
 
@@ -30,7 +31,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
         Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
         log.info("Tickets size: {}", tickets.size());
         for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
-            QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey());
+            QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey(), seleniumHandler);
             if (isStopped) {
                 seleniumHandler.stop();
                 return true;
@@ -50,7 +51,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
         List<String> scrapeTickets = urlCrawler.scrapeTickets();
         Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1(scrapeTickets);
         log.info("Tickets size: {}", tickets.size());
-        QuestionsParser questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
+        QuestionsParser questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1", seleniumHandler);
         if (isStopped) {
             seleniumHandler.stop();
             return true;

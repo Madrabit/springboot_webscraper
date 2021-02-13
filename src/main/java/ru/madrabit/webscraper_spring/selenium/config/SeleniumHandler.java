@@ -10,22 +10,24 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.Objects;
+
 /**
  * Basic Selenium methods: start, stop, getElement and etc.
  */
 @Slf4j
 public class SeleniumHandler {
-    private static SeleniumHandler seleniumHandler;
-
-    private SeleniumHandler() {
-    }
-
-    public static SeleniumHandler getSeleniumHandler() {
-        if (seleniumHandler == null) {
-            seleniumHandler = new SeleniumHandler();
-        }
-        return seleniumHandler;
-    }
+//    private static SeleniumHandler seleniumHandler;
+//
+//    private SeleniumHandler() {
+//    }
+//
+//    public static SeleniumHandler getSeleniumHandler() {
+//        if (seleniumHandler == null) {
+//            seleniumHandler = new SeleniumHandler();
+//        }
+//        return seleniumHandler;
+//    }
 
     private WebDriver driver;
     private Wait<WebDriver> wait;
@@ -131,6 +133,20 @@ public class SeleniumHandler {
 
 
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SeleniumHandler that = (SeleniumHandler) o;
+        return Objects.equals(driver, that.driver) &&
+                Objects.equals(wait, that.wait);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(driver, wait);
     }
 }
 

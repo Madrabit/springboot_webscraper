@@ -13,19 +13,20 @@ import java.util.List;
 public abstract class CustomScraperBase implements Scraper {
     public final String START_URL;
 
-    public SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
+    public final SeleniumHandler seleniumHandler;
     public String status;
     public boolean isStopped;
     public QuestionsParser questionsParser;
 
-    public CustomScraperBase(String START_URL) {
+    public CustomScraperBase(String START_URL, SeleniumHandler seleniumHandler) {
         this.START_URL = START_URL;
+        this.seleniumHandler = seleniumHandler;
     }
 
     @Override
     public void work(SiteLetters letter) {
         status = "In process";
-        if (seleniumHandler.start(true)) {
+        if (seleniumHandler.start(false)) {
             isStopped = false;
             seleniumHandler.openPage(START_URL);
             log.info("Opened main page: {}", START_URL);

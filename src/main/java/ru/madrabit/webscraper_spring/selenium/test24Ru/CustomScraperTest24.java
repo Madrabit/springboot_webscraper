@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import ru.madrabit.webscraper_spring.selenium.CustomScraperBase;
 import ru.madrabit.webscraper_spring.selenium.ScrapeTickets;
+import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper_spring.selenium.consts.ElementsConstTest24Ru;
 import ru.madrabit.webscraper_spring.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
@@ -20,8 +21,8 @@ public class CustomScraperTest24 extends CustomScraperBase {
 
     private final ru.madrabit.webscraper_spring.selenium.UrlCrawler urlCrawler;
 
-    public CustomScraperTest24() {
-        super("https://tests24.ru/?iter=1&s_group=1");
+    public CustomScraperTest24(SeleniumHandler seleniumHandler) {
+        super("https://tests24.ru/?iter=1&s_group=1", seleniumHandler);
         this.urlCrawler = new UrlCrawler(seleniumHandler);
     }
 
@@ -48,7 +49,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
             return true;
         }
         seleniumHandler.openPage("https://tests24.ru/?iter=4&bil=1&test=726");
-        QuestionsParser questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1");
+        QuestionsParser questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1", seleniumHandler);
         questionsParser.autoPassing();
         if (isStopped) {
             seleniumHandler.stop();
@@ -70,7 +71,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
         Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
         log.info("Tickets size: {}", tickets.size());
         for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
-            QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey());
+            QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey(), seleniumHandler);
             if (isStopped) {
                 seleniumHandler.stop();
                 return true;

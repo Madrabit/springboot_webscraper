@@ -13,9 +13,9 @@ public class Main {
             test24Su.scrapeOneLetter(SiteLetters.A_1);
         });
 
-//        Thread test24RuThread = new Thread(() -> {
-//            test24Ru.scrapeOneLetter(SiteLetters.A_1);
-//        });
+        Thread test24RuThread = new Thread(() -> {
+            test24Ru.scrapeOneLetter(SiteLetters.A_1);
+        });
 
 //        Thread statusThread = new Thread(() -> {
 //            try {
@@ -28,7 +28,6 @@ public class Main {
 //            }
 //        });
         test24SuThread.start();
-//        test24RuThread.start();
-//        statusThread.start();
+        test24RuThread.start();
     }
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import ru.madrabit.webscraper_spring.selenium.QuestionsParserBase;
+import ru.madrabit.webscraper_spring.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper_spring.selenium.domen.Answer;
 import ru.madrabit.webscraper_spring.selenium.domen.Question;
 
@@ -15,8 +16,8 @@ import java.util.List;
 public class QuestionsParser extends QuestionsParserBase {
 
 
-    public QuestionsParser(List<String> ticketsList, String id) {
-        super(ticketsList, id);
+    public QuestionsParser(List<String> ticketsList, String id, SeleniumHandler seleniumHandler) {
+        super(ticketsList, id, seleniumHandler);
     }
 
     public List<Question> iterateTickets() {

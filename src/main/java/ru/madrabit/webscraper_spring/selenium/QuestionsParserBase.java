@@ -9,12 +9,13 @@ import java.util.List;
 @Slf4j
 public abstract class QuestionsParserBase {
     protected int questionSerial;
-    protected final SeleniumHandler seleniumHandler = SeleniumHandler.getSeleniumHandler();
+    public final SeleniumHandler seleniumHandler;
     protected final List<String> ticketsList;
     protected final String id;
     protected boolean isStopped;
 
-    public QuestionsParserBase(List<String> ticketsList, String id) {
+    public QuestionsParserBase(List<String> ticketsList, String id, SeleniumHandler seleniumHandler) {
+        this.seleniumHandler = seleniumHandler;
         this.ticketsList = ticketsList;
         this.id = id;
     }
