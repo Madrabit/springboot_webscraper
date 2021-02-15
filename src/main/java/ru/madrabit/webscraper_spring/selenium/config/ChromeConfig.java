@@ -2,6 +2,7 @@ package ru.madrabit.webscraper_spring.selenium.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.stereotype.Component;
 
 /**
  * Config for Chromediver.
@@ -9,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
  * IMPORTANT chromedriver.exe should match Selenium version driver.
  */
 @Slf4j
+@Component
 public class ChromeConfig {
     public static final String CHROME_DRIVER_PATH = "chromedriver.exe";
 

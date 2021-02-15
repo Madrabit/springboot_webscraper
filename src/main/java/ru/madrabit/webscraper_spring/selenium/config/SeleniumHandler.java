@@ -9,6 +9,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
@@ -16,6 +18,8 @@ import java.util.Objects;
  * Basic Selenium methods: start, stop, getElement and etc.
  */
 @Slf4j
+@Component
+@Scope("prototype")
 public class SeleniumHandler {
 //    private static SeleniumHandler seleniumHandler;
 //
