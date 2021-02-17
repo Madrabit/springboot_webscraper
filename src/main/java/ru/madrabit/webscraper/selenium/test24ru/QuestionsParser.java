@@ -1,5 +1,7 @@
 package ru.madrabit.webscraper.selenium.test24ru;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -23,6 +25,8 @@ public class QuestionsParser extends QuestionsParserBase {
     public List<Question> iterateTickets() {
         List<Question> questionList = new LinkedList<>();
         this.setQuestionSerial(0);
+        int tickets = ticketsList.size();
+        double counter = 0;
         for (String ticket : ticketsList) {
             if (isStopped) {
                 seleniumHandler.stop();
@@ -36,6 +40,9 @@ public class QuestionsParser extends QuestionsParserBase {
                 e.printStackTrace();
             }
             questionList.addAll(getAllQuestions(id));
+            counter++;
+            double passed = counter / tickets * 100;
+            passedTickets = (int) passed;
         }
         return questionList;
     }
@@ -89,4 +96,7 @@ public class QuestionsParser extends QuestionsParserBase {
         return question;
     }
 
+    public int getPassedTickets() {
+        return passedTickets;
+    }
 }

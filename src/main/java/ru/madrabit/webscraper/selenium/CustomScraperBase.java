@@ -1,26 +1,31 @@
 package ru.madrabit.webscraper.selenium;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import ru.madrabit.webscraper.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper.selenium.domen.Question;
 import ru.madrabit.webscraper.selenium.poi.CreateExcel;
-import ru.madrabit.webscraper.selenium.test24ru.QuestionsParser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public abstract class CustomScraperBase implements Scraper {
     public final String startUrl;
-
+    protected Map<String, List<String>> tickets = new HashMap<>();
     public final SeleniumHandler seleniumHandler;
     public String status;
     public boolean isStopped;
-    public QuestionsParser questionsParser;
+    public QuestionsParserBase questionsParser;
+    protected int passedTickets;
+
 
     public CustomScraperBase(String startUrl, SeleniumHandler seleniumHandler) {
         this.startUrl = startUrl;
         this.seleniumHandler = seleniumHandler;
+
     }
 
     @Override
@@ -45,7 +50,9 @@ public abstract class CustomScraperBase implements Scraper {
 
     protected abstract boolean workLetters(SiteLetters letter);
 
+
     protected abstract boolean workA();
+
 
 
     public void saveToFile(List<Question> questionsList, boolean isEmpty, String letter) {
@@ -56,10 +63,7 @@ public abstract class CustomScraperBase implements Scraper {
         }
     }
 
-    public void stop() {
-        questionsParser.setStopped(true);
-        this.isStopped = true;
-    }
+
 
     @Override
     public String getStatus() {
@@ -69,5 +73,15 @@ public abstract class CustomScraperBase implements Scraper {
     @Override
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public Map<String, List<String>> getTickets() {
+        return tickets;
+    }
+
+    @Override
+    public int getPassedTickets() {
+        return questionsParser.getPassedTickets();
     }
 }

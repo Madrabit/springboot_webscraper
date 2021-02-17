@@ -10,4 +10,6 @@ public interface TargetSite {
     String getStatus();
 
     void stop();
+
+    int getPassedTickets();
 }

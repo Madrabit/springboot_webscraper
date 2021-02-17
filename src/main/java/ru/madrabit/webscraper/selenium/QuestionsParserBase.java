@@ -13,6 +13,7 @@ public abstract class QuestionsParserBase {
     protected final List<String> ticketsList;
     protected final String id;
     protected boolean isStopped;
+    protected int passedTickets;
 
     public QuestionsParserBase(List<String> ticketsList, String id, SeleniumHandler seleniumHandler) {
         this.seleniumHandler = seleniumHandler;
@@ -42,5 +43,9 @@ public abstract class QuestionsParserBase {
 
     public void setStopped(boolean stopped) {
         isStopped = stopped;
+    }
+
+    public int getPassedTickets() {
+        return passedTickets;
     }
 }

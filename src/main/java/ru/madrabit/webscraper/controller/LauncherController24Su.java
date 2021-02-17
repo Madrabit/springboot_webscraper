@@ -45,6 +45,12 @@ public class LauncherController24Su {
         return ResponseEntity.ok(service.getStatus(site));
     }
 
+    @ApiOperation(value = "Get scrapper status")
+    @GetMapping("/{site}/percent")
+    public ResponseEntity<Integer> getPassedTicketsPercent(@PathVariable String site) {
+        return ResponseEntity.ok(service.getPassedTicketsPercent(site));
+    }
+
     @ApiOperation(value = "Stop parser. Switch it off.")
     @GetMapping("/{site}/stop")
     public ResponseEntity<String> stopParser(@PathVariable String site) {

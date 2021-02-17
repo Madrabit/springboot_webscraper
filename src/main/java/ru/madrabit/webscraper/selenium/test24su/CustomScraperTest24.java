@@ -13,7 +13,7 @@ import java.util.Map;
 @Slf4j
 public class CustomScraperTest24 extends CustomScraperBase {
 
-    private final ru.madrabit.webscraper.selenium.UrlCrawler urlCrawler;
+    private final UrlCrawler urlCrawler;
 
     public CustomScraperTest24(SeleniumHandler seleniumHandler) {
         super(ElementsConstTest24Su.START_URL, seleniumHandler);
@@ -67,5 +67,9 @@ public class CustomScraperTest24 extends CustomScraperBase {
         return questionsList;
     }
 
+    public void stop() {
+        questionsParser.setStopped(true);
+        this.isStopped = true;
+    }
 
 }

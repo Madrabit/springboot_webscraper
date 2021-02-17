@@ -29,7 +29,7 @@ public class LauncherService {
             Thread scrapThread24Su = new Thread(() -> {
                 test24Su.scrapeOneLetter(SiteLetters.valueOf(upperLetter));
             });
-            scrapThread24Su.start();
+//            scrapThread24Su.start();
             scrapThread.start();
         }
         return "started";
@@ -37,6 +37,10 @@ public class LauncherService {
 
     public String getStatus(String site) {
         return test24Ru.getStatus();
+    }
+
+    public int getPassedTicketsPercent(String site) {
+        return test24Ru.getPassedTickets();
     }
 
     public String executeAll(String site) {
