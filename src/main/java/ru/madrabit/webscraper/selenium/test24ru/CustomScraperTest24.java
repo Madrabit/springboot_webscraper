@@ -1,20 +1,15 @@
 package ru.madrabit.webscraper.selenium.test24ru;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.map.HashedMap;
 import ru.madrabit.webscraper.selenium.CustomScraperBase;
 import ru.madrabit.webscraper.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper.selenium.consts.ElementsConstTest24Ru;
 import ru.madrabit.webscraper.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper.selenium.domen.Question;
 
-import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Getter
@@ -47,7 +42,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
             return true;
         }
         List<Question> questionsList = getQuestions(questionsParser);
-        saveToFile(questionsList, questionsList.isEmpty(), "A.1");
+        saveToFile(questionsList, questionsList.isEmpty(), "test24ru", "A.1");
         return false;
     }
 
@@ -68,7 +63,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
                 return true;
             }
             List<Question> questionsList = getQuestions(questionsParser);
-            saveToFile(questionsList, questionsList.isEmpty(), entry.getKey());
+            saveToFile(questionsList, questionsList.isEmpty(), "test24ru", entry.getKey());
         }
         return false;
     }

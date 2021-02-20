@@ -19,18 +19,25 @@ public class LauncherService {
         this.test24Su = new Test24Su();
     }
 
-    public String executeByLetter(String letter) {
+    public String executeByLetter(String site, String letter) {
         String upperLetter = letter.toUpperCase();
+        String siteLower = site.toLowerCase();
         boolean isExists = Arrays.stream(SiteLetters.values()).anyMatch((l) -> l.name().equals(upperLetter));
         if (isExists) {
-            Thread scrapThread = new Thread(() -> {
+            Thread scrapThread24ru = new Thread(() -> {
                 test24Ru.scrapeOneLetter(SiteLetters.valueOf(upperLetter));
             });
-            Thread scrapThread24Su = new Thread(() -> {
+            Thread scrapThread24su = new Thread(() -> {
                 test24Su.scrapeOneLetter(SiteLetters.valueOf(upperLetter));
             });
-//            scrapThread24Su.start();
-            scrapThread.start();
+            if ("test24su".equals(siteLower)) {
+                scrapThread24su.start();
+            } else if ("test24ru".equals(siteLower)) {
+                scrapThread24ru.start();
+            } else {
+                return "No such site";
+            }
+
         }
         return "started";
     }
@@ -43,7 +50,7 @@ public class LauncherService {
         return test24Ru.getPassedTickets();
     }
 
-    public String executeAll(String site) {
+    public String executeAll(String s, String site) {
         Thread scrapThread = new Thread(() -> {
             Arrays.stream(SiteLetters.values())
                     .forEach(letter -> test24Ru.scrapeOneLetter(letter));

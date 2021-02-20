@@ -14,6 +14,8 @@ import ru.madrabit.webscraper.selenium.domen.Question;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
@@ -22,9 +24,13 @@ public class CreateExcel {
     private String filePath;
 
 
-    public CreateExcel(String id) {
-        System.out.println(System.getProperty("user.dir"));
-        filePath = System.getProperty("user.dir") + "/tests/" + id + ".xlsx";
+    public CreateExcel(String siteName, String id) {
+        log.info(System.getProperty("user.dir"));
+        filePath = System.getProperty("user.dir")
+                + File.separator + "test" + File.separator
+                + siteName + File.separator
+                + id + ".xlsx";
+
     }
 
     public void createExcel(List<Question> questionList) {

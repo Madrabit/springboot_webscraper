@@ -37,7 +37,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
                 return true;
             }
             List<Question> questionsList = getQuestions(questionsParser);
-            saveToFile(questionsList, questionsList.isEmpty(), entry.getKey());
+            saveToFile(questionsList, questionsList.isEmpty(), "test24su", entry.getKey());
         }
         return false;
     }
@@ -57,7 +57,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
             return true;
         }
         List<Question> questionsList = getQuestions(questionsParser);
-        saveToFile(questionsList, questionsList.isEmpty(), "A.1");
+        saveToFile(questionsList, questionsList.isEmpty(), "test24su", "A.1");
         return false;
     }
 

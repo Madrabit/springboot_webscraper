@@ -55,9 +55,9 @@ public abstract class CustomScraperBase implements Scraper {
 
 
 
-    public void saveToFile(List<Question> questionsList, boolean isEmpty, String letter) {
+    public void saveToFile(List<Question> questionsList, boolean isEmpty, String siteName, String letter) {
         if (!isEmpty) {
-            CreateExcel excelDemo = new CreateExcel(letter);
+            CreateExcel excelDemo = new CreateExcel(siteName, letter);
             excelDemo.createExcel(questionsList);
             status = "Finished";
         }
