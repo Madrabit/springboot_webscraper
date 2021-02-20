@@ -1,7 +1,5 @@
 package ru.madrabit.webscraper.selenium.test24ru;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

@@ -15,5 +15,5 @@ public enum SiteLetters {
     B_10,
     B_11,
     B_12,
-    D;
+    D
 }

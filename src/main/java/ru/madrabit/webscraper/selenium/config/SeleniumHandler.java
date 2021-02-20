@@ -13,8 +13,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 /**
  * Basic Selenium methods: start, stop, getElement and etc.
  */
@@ -50,14 +48,12 @@ public class SeleniumHandler {
         return true;
     }
 
-    public boolean openPage(String url) {
+    public void openPage(String url) {
         try {
             driver.get(url);
         } catch (Exception e) {
             log.warn("Error opening page: {}", url);
-            return false;
         }
-        return true;
     }
 
     public void stop() {
@@ -135,7 +131,7 @@ public class SeleniumHandler {
 //            e.printStackTrace();
 //        }
         js.executeScript("document.querySelector('.watupro-submit-button:not([style*=\"display: none\"]').disabled = false;" +
-                "document.querySelector(\'.watupro-submit-button:not([style*=\"display: none\"]\').click();");
+                "document.querySelector('.watupro-submit-button:not([style*=\"display: none\"]').click();");
 
 
 

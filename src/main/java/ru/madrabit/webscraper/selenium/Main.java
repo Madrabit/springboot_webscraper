@@ -9,13 +9,9 @@ public class Main {
         SiteBase test24Su = new Test24Su();
         SiteBase test24Ru = new Test24Ru();
 
-        Thread test24SuThread = new Thread(() -> {
-            test24Su.scrapeOneLetter(SiteLetters.A_1);
-        });
+        Thread test24SuThread = new Thread(() -> test24Su.scrapeOneLetter(SiteLetters.A_1));
 
-        Thread test24RuThread = new Thread(() -> {
-            test24Ru.scrapeOneLetter(SiteLetters.A_1);
-        });
+        Thread test24RuThread = new Thread(() -> test24Ru.scrapeOneLetter(SiteLetters.A_1));
 
 //        Thread statusThread = new Thread(() -> {
 //            try {

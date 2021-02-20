@@ -11,12 +11,14 @@ import java.util.Arrays;
 @Service
 public class LauncherService {
 
-    private final TargetSite test24Ru;
-    private final TargetSite test24Su;
+    private final TargetSite test24ru;
+    private final TargetSite test24su;
+    private static final String TEST_24_SU = "test24su";
+    private static final String TEST_24_RU = "test24ru";
 
     public LauncherService() {
-        this.test24Ru = new Test24Ru();
-        this.test24Su = new Test24Su();
+        this.test24ru = new Test24Ru();
+        this.test24su = new Test24Su();
     }
 
     public String executeByLetter(String site, String letter) {
@@ -24,15 +26,13 @@ public class LauncherService {
         String siteLower = site.toLowerCase();
         boolean isExists = Arrays.stream(SiteLetters.values()).anyMatch((l) -> l.name().equals(upperLetter));
         if (isExists) {
-            Thread scrapThread24ru = new Thread(() -> {
-                test24Ru.scrapeOneLetter(SiteLetters.valueOf(upperLetter));
-            });
-            Thread scrapThread24su = new Thread(() -> {
-                test24Su.scrapeOneLetter(SiteLetters.valueOf(upperLetter));
-            });
-            if ("test24su".equals(siteLower)) {
+            Thread scrapThread24ru = new Thread(() ->
+                test24ru.scrapeOneLetter(SiteLetters.valueOf(upperLetter)));
+            Thread scrapThread24su = new Thread(() ->
+                    test24su.scrapeOneLetter(SiteLetters.valueOf(upperLetter)));
+            if (TEST_24_SU.equals(siteLower)) {
                 scrapThread24su.start();
-            } else if ("test24ru".equals(siteLower)) {
+            } else if (TEST_24_RU.equals(siteLower)) {
                 scrapThread24ru.start();
             } else {
                 return "No such site";
@@ -43,23 +43,35 @@ public class LauncherService {
     }
 
     public String getStatus(String site) {
-        return test24Ru.getStatus();
+        return test24ru.getStatus();
     }
 
     public int getPassedTicketsPercent(String site) {
-        return test24Ru.getPassedTickets();
+        return test24ru.getPassedTickets();
     }
 
-    public String executeAll(String s, String site) {
-        Thread scrapThread = new Thread(() -> {
-            Arrays.stream(SiteLetters.values())
-                    .forEach(letter -> test24Ru.scrapeOneLetter(letter));
-        });
-        scrapThread.start();
+    public String executeAll(String site) {
+        String siteLower = site.toLowerCase();
+        Thread scrapThread24ru = new Thread(() -> Arrays.stream(SiteLetters.values())
+                    .forEach(test24ru::scrapeOneLetter));
+        Thread scrapThread24su = new Thread(() -> Arrays.stream(SiteLetters.values())
+                .forEach(test24su::scrapeOneLetter));
+        if (TEST_24_SU.equals(siteLower)) {
+            scrapThread24su.start();
+        } else if (TEST_24_RU.equals(siteLower)) {
+            scrapThread24ru.start();
+        } else {
+            return "No such site";
+        }
         return "started";
     }
 
     public void stop(String site) {
-        test24Ru.stop();
+        String siteLower = site.toLowerCase();
+        if (TEST_24_SU.equals(siteLower)) {
+            test24su.stop();
+        } else if (TEST_24_RU.equals(siteLower)) {
+            test24ru.stop();
+        }
     }
 }

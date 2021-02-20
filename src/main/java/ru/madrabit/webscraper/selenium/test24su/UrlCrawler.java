@@ -81,7 +81,7 @@ public class UrlCrawler extends UrlCrawlerBase {
     private static Enum<SiteLetters> getTestNameFromUrl(String url) throws NoSuchLetterException {
         String s = url.substring(19);
         String[] splitted = s.split("-");
-        String result = "";
+        String result;
         // if letter and number glued like "b1"
         if (splitted[0].length() > 1) {
             return SiteLetters.valueOf(splitted[0].substring(0, 1).toUpperCase()
@@ -104,7 +104,7 @@ public class UrlCrawler extends UrlCrawlerBase {
     private String getTestNameFromTicketUrl(String url) throws NoSuchLetterException {
         String s = url.substring(19);
         String[] splitted = s.split("-");
-        String result = "";
+        String result;
         switch (splitted[0]) {
             case "b":
                 result = "Б." + splitted[1] + "." + splitted[2];

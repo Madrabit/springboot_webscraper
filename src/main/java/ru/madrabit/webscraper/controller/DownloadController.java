@@ -3,19 +3,15 @@ package ru.madrabit.webscraper.controller;
 import com.google.common.io.ByteStreams;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.madrabit.webscraper.service.DownloadService;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 @RestController
@@ -23,7 +19,7 @@ import java.util.List;
 @Api(value = "hello", description = "REST API description")
 public class DownloadController {
 
-    DownloadService service;
+    private final DownloadService service;
 
     public DownloadController(DownloadService service) {
         this.service = service;

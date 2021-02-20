@@ -75,12 +75,13 @@ public class CustomScraperTest24 extends CustomScraperBase {
         return questionsList;
     }
 
-    public int getPassedTickets() {
-        return questionsParser.getPassedTickets();
-    }
-
     public void stop() {
         questionsParser.setStopped(true);
         this.isStopped = true;
+    }
+
+    @Override
+    public int getPassedTickets() {
+        return questionsParser.getPassedTickets();
     }
 }

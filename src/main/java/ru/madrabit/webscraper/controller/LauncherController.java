@@ -12,9 +12,9 @@ import ru.madrabit.webscraper.service.LauncherService;
 
 @RestController
 @RequestMapping("/api/launcher")
-@Api(value = "hello", description = "REST API description")
+@Api(description = "REST API description")
 public class LauncherController {
-    LauncherService service;
+    private final LauncherService service;
 
     public LauncherController(LauncherService service) {
         this.service = service;
@@ -22,7 +22,7 @@ public class LauncherController {
 
     @ApiOperation(value = "Launch scraper with Parameter")
     @GetMapping("/{site}/{letter}")
-    public ResponseEntity launchByLetter(@ApiParam(name = "site",
+    public ResponseEntity<String> launchByLetter(@ApiParam(name = "site",
             required = true, example = "test24ru",
             allowableValues = "test24su, test24ru")
                                          @PathVariable String site,
@@ -34,9 +34,9 @@ public class LauncherController {
 
     @ApiOperation(value = "Launch to get All tests")
     @GetMapping("/{site}/all")
-    public ResponseEntity launchAll(@PathVariable String site, @PathVariable String letter
+    public ResponseEntity<String> launchAll(@PathVariable String site
     ) {
-        return ResponseEntity.ok(service.executeAll(site, letter));
+        return ResponseEntity.ok(service.executeAll(site));
     }
 
     @ApiOperation(value = "Get scrapper status")

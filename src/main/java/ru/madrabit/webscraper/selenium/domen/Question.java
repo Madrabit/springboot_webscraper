@@ -19,12 +19,7 @@ import java.util.TreeSet;
 public class Question {
     private String id;
     private String text;
-    private Set<Answer> answerSet = new TreeSet<>(new Comparator<Answer>() {
-        @Override
-        public int compare(Answer o1, Answer o2) {
-            return o1.getId() - o2.getId();
-        }
-    });
+    private Set<Answer> answerSet = new TreeSet<>(Comparator.comparingInt(Answer::getId));
     private Set<Integer> answerNumber = new HashSet<>();
 
     public Question(String id, String text) {

@@ -52,9 +52,8 @@ public class UrlCrawler extends UrlCrawlerBase {
     }
 
     public List<String> scrapeTickets() {
-        WebElement elements = null;
         List<String> tickets = new ArrayList<>();
-        elements = seleniumHandler.getElement(ROW_WITH_TICKETS);
+        WebElement elements = seleniumHandler.getElement(ROW_WITH_TICKETS);
         if (elements != null) {
             tickets = elements.findElements(By.cssSelector(LINKS)).stream()
                     .map(e -> e.getAttribute("href")).collect(toList());

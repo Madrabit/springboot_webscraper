@@ -23,11 +23,6 @@ public class QuestionsParser extends QuestionsParserBase {
 
     public List<Question> iterateTickets() {
         List<Question> questionList = new LinkedList<>();
-        if (seleniumHandler ==  null) {
-            log.error("Is null", seleniumHandler);
-        } else {
-            log.error("Not null", seleniumHandler);
-        }
         this.setQuestionSerial(0);
         for (String ticket : ticketsList) {
             if (isStopped) {

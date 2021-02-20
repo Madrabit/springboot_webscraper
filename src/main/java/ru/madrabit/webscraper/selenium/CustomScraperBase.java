@@ -1,6 +1,5 @@
 package ru.madrabit.webscraper.selenium;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import ru.madrabit.webscraper.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper.selenium.consts.SiteLetters;
@@ -19,7 +18,6 @@ public abstract class CustomScraperBase implements Scraper {
     public String status;
     public boolean isStopped;
     public QuestionsParserBase questionsParser;
-    protected int passedTickets;
 
 
     public CustomScraperBase(String startUrl, SeleniumHandler seleniumHandler) {
@@ -80,8 +78,4 @@ public abstract class CustomScraperBase implements Scraper {
         return tickets;
     }
 
-    @Override
-    public int getPassedTickets() {
-        return questionsParser.getPassedTickets();
-    }
 }

@@ -14,6 +14,7 @@ import java.util.Map;
 public class CustomScraperTest24 extends CustomScraperBase {
 
     private final UrlCrawler urlCrawler;
+    protected QuestionsParser questionsParser;
 
     public CustomScraperTest24(SeleniumHandler seleniumHandler) {
         super(ElementsConstTest24Su.START_URL, seleniumHandler);
@@ -31,7 +32,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
         Map<String, List<String>> tickets = urlCrawler.getTicketsUrl(subTests);
         log.info("Tickets size: {}", tickets.size());
         for (Map.Entry<String, List<String>> entry : tickets.entrySet()) {
-            QuestionsParser questionsParser = new QuestionsParser(entry.getValue(), entry.getKey(), seleniumHandler);
+            questionsParser = new QuestionsParser(entry.getValue(), entry.getKey(), seleniumHandler);
             if (isStopped) {
                 seleniumHandler.stop();
                 return true;
@@ -51,7 +52,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
         List<String> scrapeTickets = urlCrawler.scrapeTickets();
         Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1(scrapeTickets);
         log.info("Tickets size: {}", tickets.size());
-        QuestionsParser questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1", seleniumHandler);
+        questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1", seleniumHandler);
         if (isStopped) {
             seleniumHandler.stop();
             return true;
@@ -70,6 +71,11 @@ public class CustomScraperTest24 extends CustomScraperBase {
     public void stop() {
         questionsParser.setStopped(true);
         this.isStopped = true;
+    }
+
+    @Override
+    public int getPassedTickets() {
+        return questionsParser.getPassedTickets();
     }
 
 }

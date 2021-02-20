@@ -28,7 +28,7 @@ public abstract class SiteBase implements TargetSite {
 
     public void scrapeAllLetters() {
         Arrays.stream(SiteLetters.values())
-                .forEach(letter -> scraperForOne.work(letter));
+                .forEach(scraperForOne::work);
     }
 
     @Override

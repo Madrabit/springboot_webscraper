@@ -14,14 +14,12 @@ import ru.madrabit.webscraper.selenium.domen.Question;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
 public class CreateExcel {
 
-    private String filePath;
+    private final String filePath;
 
 
     public CreateExcel(String siteName, String id) {
@@ -174,12 +172,17 @@ public class CreateExcel {
 
     private void createFile(XSSFWorkbook workbook) {
         File file = new File(filePath);
-        file.getParentFile().mkdirs();
-        try (FileOutputStream outFile = new FileOutputStream(file)) {
-            workbook.write(outFile);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
+        boolean mkdirs = file.getParentFile().mkdirs();
+        if (mkdirs) {
+            try (FileOutputStream outFile = new FileOutputStream(file)) {
+                workbook.write(outFile);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+            log.info("Created file: {}", file.getAbsolutePath());
+        } else {
+            log.error("Directory was not created. {}", false);
         }
-        log.info("Created file: {}", file.getAbsolutePath());
+
     }
 }
