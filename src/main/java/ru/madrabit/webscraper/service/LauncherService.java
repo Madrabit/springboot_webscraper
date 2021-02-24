@@ -1,5 +1,6 @@
 package ru.madrabit.webscraper.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.madrabit.webscraper.selenium.TargetSite;
 import ru.madrabit.webscraper.selenium.consts.SiteLetters;
@@ -15,6 +16,7 @@ public class LauncherService {
     private final TargetSite test24su;
     private static final String TEST_24_SU = "test24su";
     private static final String TEST_24_RU = "test24ru";
+
 
     public LauncherService() {
         this.test24ru = new Test24Ru();
@@ -52,10 +54,16 @@ public class LauncherService {
 
     public String executeAll(String site) {
         String siteLower = site.toLowerCase();
-        Thread scrapThread24ru = new Thread(() -> Arrays.stream(SiteLetters.values())
-                    .forEach(test24ru::scrapeOneLetter));
-        Thread scrapThread24su = new Thread(() -> Arrays.stream(SiteLetters.values())
-                .forEach(test24su::scrapeOneLetter));
+        Thread scrapThread24ru = new Thread(() -> {
+            for (SiteLetters siteLetters : SiteLetters.values()) {
+                test24ru.scrapeOneLetter(siteLetters);
+            }
+        });
+        Thread scrapThread24su = new Thread(() -> {
+            for (SiteLetters siteLetters : SiteLetters.values()) {
+                test24su.scrapeOneLetter(siteLetters);
+            }
+        });
         if (TEST_24_SU.equals(siteLower)) {
             scrapThread24su.start();
         } else if (TEST_24_RU.equals(siteLower)) {

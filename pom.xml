@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.madrabit</groupId>
-    <artifactId>webscrapper_spring</artifactId>
+    <artifactId>webscraper_spring</artifactId>
     <version>0.1</version>
-    <name>webscrapper_spring</name>
+    <name>webscraper_spring</name>
     <description>Spring Boot Web parser project</description>
 
     <properties>

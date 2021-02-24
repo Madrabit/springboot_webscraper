@@ -9,6 +9,7 @@ import ru.madrabit.webscraper.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper.selenium.exceptions.NoSuchLetterException;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -35,7 +36,6 @@ public class UrlCrawler extends UrlCrawlerBase {
         log.info("Letters collected: {}", map.size());
         return map;
     }
-
 
     @Override
     public Map<String, String> scrapeSubTests() {

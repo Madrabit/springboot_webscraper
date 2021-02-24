@@ -9,6 +9,7 @@ import ru.madrabit.webscraper.selenium.poi.CreateExcel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 @Slf4j
 public abstract class CustomScraperBase implements Scraper {
@@ -19,17 +20,16 @@ public abstract class CustomScraperBase implements Scraper {
     public boolean isStopped;
     public QuestionsParserBase questionsParser;
 
-
     public CustomScraperBase(String startUrl, SeleniumHandler seleniumHandler) {
         this.startUrl = startUrl;
         this.seleniumHandler = seleniumHandler;
-
     }
 
     @Override
     public void work(SiteLetters letter) {
-        status = "In process";
-        if (seleniumHandler.start(false)) {
+        Properties properties = new Properties();
+        final boolean headlessMode = Boolean.parseBoolean(properties.getProperty("headless-mode"));
+        if (seleniumHandler.start(headlessMode)) {
             isStopped = false;
             seleniumHandler.openPage(startUrl);
             log.info("Opened main page: {}", startUrl);

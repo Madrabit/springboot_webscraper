@@ -13,9 +13,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChromeConfig {
     public static final String CHROME_DRIVER_PATH = "chromedriver.exe";
+    private static String osName = System.getProperty("os.name");
+
 
     public static void setDriverPath() {
-        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+        if (osName.startsWith("Linux")) {
+            System.setProperty("webdriver.chrome.driver", "chromedriver");
+        } else if (osName.startsWith("Windows")) {
+            System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        }
         log.info("Path to chrome driver: {}", System.getProperty("webdriver.chrome.driver"));
     }
 

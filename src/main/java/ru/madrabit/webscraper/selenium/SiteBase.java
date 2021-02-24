@@ -52,4 +52,5 @@ public abstract class SiteBase implements TargetSite {
     public int getPassedTickets() {
         return scraperForOne.getPassedTickets();
     }
+
 }

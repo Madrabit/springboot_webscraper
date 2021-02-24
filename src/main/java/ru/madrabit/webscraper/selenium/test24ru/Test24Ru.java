@@ -5,7 +5,10 @@ import ru.madrabit.webscraper.selenium.config.SeleniumHandler;
 
 public class Test24Ru extends SiteBase {
 
+    private boolean headlessMode;
+
     public Test24Ru() {
         super(new CustomScraperTest24(new SeleniumHandler()));
     }
+
 }
