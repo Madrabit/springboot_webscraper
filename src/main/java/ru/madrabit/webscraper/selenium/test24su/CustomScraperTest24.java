@@ -7,8 +7,10 @@ import ru.madrabit.webscraper.selenium.consts.ElementsConstTest24Su;
 import ru.madrabit.webscraper.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper.selenium.domen.Question;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 public class CustomScraperTest24 extends CustomScraperBase {
@@ -63,9 +65,9 @@ public class CustomScraperTest24 extends CustomScraperBase {
     }
 
     private List<Question> getQuestions(QuestionsParser questionsParser) {
-        List<Question> questionsList = questionsParser.iterateTickets();
-        log.info("Questions in ticket: {}", questionsList.size());
-        return questionsList;
+        Optional<List<Question>> questionsList = Optional.ofNullable(questionsParser.iterateTickets());
+        log.info("Questions in ticket: {}", questionsList.isPresent() ? questionsList.get().size() : new ArrayList<>());
+        return questionsList.orElse(new ArrayList<>());
     }
 
     public void stop() {

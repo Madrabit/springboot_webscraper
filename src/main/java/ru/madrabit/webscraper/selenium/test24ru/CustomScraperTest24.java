@@ -8,8 +8,10 @@ import ru.madrabit.webscraper.selenium.consts.ElementsConstTest24Ru;
 import ru.madrabit.webscraper.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper.selenium.domen.Question;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Getter
@@ -18,6 +20,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
     private int passedTickets;
     private final UrlCrawler urlCrawler;
     protected QuestionsParser questionsParser;
+    private final String startUrlA = "https://tests24.ru/?iter=4&bil=1&test=726";
 
     public CustomScraperTest24(SeleniumHandler seleniumHandler) {
         super(ElementsConstTest24Ru.START_URL, seleniumHandler);
@@ -28,13 +31,12 @@ public class CustomScraperTest24 extends CustomScraperBase {
         seleniumHandler.openPage(ElementsConstTest24Ru.A_TICKETS);
         List<String> ticketsScraper = urlCrawler.scrapeTickets();
         tickets = urlCrawler.getTicketsUrlForA1(ticketsScraper);
-
         log.info("Tickets size: {}", tickets.size());
         if (isStopped) {
             seleniumHandler.stop();
             return true;
         }
-        seleniumHandler.openPage("https://tests24.ru/?iter=4&bil=1&test=726");
+        seleniumHandler.openPage(startUrlA);
         questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1", seleniumHandler);
         questionsParser.autoPassing();
         if (isStopped) {
@@ -70,9 +72,9 @@ public class CustomScraperTest24 extends CustomScraperBase {
 
 
     private List<Question> getQuestions(QuestionsParser questionsParser) {
-        List<Question> questionsList = questionsParser.iterateTickets();
-        log.info("Questions in ticket: {}", questionsList.size());
-        return questionsList;
+        Optional<List<Question>> questionsList = Optional.ofNullable(questionsParser.iterateTickets());
+        log.info("Questions in ticket: {}", questionsList.isPresent() ? questionsList.get().size() : new ArrayList<>());
+        return questionsList.orElse(new ArrayList<>());
     }
 
     public void stop() {

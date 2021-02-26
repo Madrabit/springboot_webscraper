@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class ChromeConfig {
-    public static final String CHROME_DRIVER_PATH = "chromedriver.exe";
     private static String osName = System.getProperty("os.name");
 
 

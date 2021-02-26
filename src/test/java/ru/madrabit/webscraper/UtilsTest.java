@@ -3,6 +3,8 @@ package ru.madrabit.webscraper;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.stream.IntStream;
+
 
 public class UtilsTest {
     @Test

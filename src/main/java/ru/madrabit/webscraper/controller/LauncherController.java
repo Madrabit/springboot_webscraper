@@ -34,26 +34,42 @@ public class LauncherController {
 
     @ApiOperation(value = "Launch to get All tests")
     @GetMapping("/{site}/all")
-    public ResponseEntity<String> launchAll(@PathVariable String site
+    public ResponseEntity<String> launchAll(
+            @ApiParam(name = "site",
+                    required = true, example = "test24ru",
+                    allowableValues = "test24su, test24ru")
+            @PathVariable String site
     ) {
         return ResponseEntity.ok(service.executeAll(site));
     }
 
     @ApiOperation(value = "Get scrapper status")
     @GetMapping("/{site}/status")
-    public ResponseEntity<String> getStatus(@PathVariable String site) {
+    public ResponseEntity<String> getStatus(
+            @ApiParam(name = "site",
+                    required = true, example = "test24ru",
+                    allowableValues = "test24su, test24ru")
+            @PathVariable String site) {
         return ResponseEntity.ok(service.getStatus(site));
     }
 
-    @ApiOperation(value = "Get scrapper status")
+    @ApiOperation(value = "Get Progress in percents")
     @GetMapping("/{site}/percent")
-    public ResponseEntity<Integer> getPassedTicketsPercent(@PathVariable String site) {
+    public ResponseEntity<Integer> getPassedTicketsPercent(
+            @ApiParam(name = "site",
+                    required = true, example = "test24ru",
+                    allowableValues = "test24su, test24ru")
+            @PathVariable String site) {
         return ResponseEntity.ok(service.getPassedTicketsPercent(site));
     }
 
     @ApiOperation(value = "Stop parser. Switch it off.")
     @GetMapping("/{site}/stop")
-    public ResponseEntity<String> stopParser(@PathVariable String site) {
+    public ResponseEntity<String> stopParser(
+            @ApiParam(name = "site",
+                    required = true, example = "test24ru",
+                    allowableValues = "test24su, test24ru")
+            @PathVariable String site) {
         service.stop(site);
         return ResponseEntity.ok(service.getStatus(site));
     }

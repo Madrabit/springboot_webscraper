@@ -6,6 +6,11 @@ import ru.madrabit.webscraper.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper.selenium.domen.Question;
 import ru.madrabit.webscraper.selenium.poi.CreateExcel;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +32,19 @@ public abstract class CustomScraperBase implements Scraper {
 
     @Override
     public void work(SiteLetters letter) {
-        Properties properties = new Properties();
-        final boolean headlessMode = Boolean.parseBoolean(properties.getProperty("headless-mode"));
+        boolean headlessMode = true;
+        try (FileInputStream inputStream = new FileInputStream("src"
+                + File.separator + "main"
+                + File.separator + "resources"
+                + File.separator + "config.properties")) {
+            Properties properties = new Properties();
+            headlessMode = Boolean.parseBoolean(properties.getProperty("headless-mode"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if (seleniumHandler.start(headlessMode)) {
             isStopped = false;
             seleniumHandler.openPage(startUrl);
