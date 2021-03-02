@@ -25,7 +25,7 @@ public class CreateExcel {
     public CreateExcel(String siteName, String id) {
         log.info(System.getProperty("user.dir"));
         filePath = System.getProperty("user.dir")
-                + File.separator + "test" + File.separator
+                + File.separator + "tests" + File.separator
                 + siteName + File.separator
                 + id + ".xlsx";
 

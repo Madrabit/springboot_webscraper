@@ -38,6 +38,7 @@ public abstract class CustomScraperBase implements Scraper {
                 + File.separator + "resources"
                 + File.separator + "config.properties")) {
             Properties properties = new Properties();
+            properties.load(inputStream);
             headlessMode = Boolean.parseBoolean(properties.getProperty("headless-mode"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();

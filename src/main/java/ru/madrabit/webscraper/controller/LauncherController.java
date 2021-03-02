@@ -3,32 +3,51 @@ package ru.madrabit.webscraper.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.maven.model.Site;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.madrabit.webscraper.exception.InvalidInputException;
+import ru.madrabit.webscraper.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper.service.LauncherService;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/launcher")
 @Api(description = "REST API description")
 public class LauncherController {
     private final LauncherService service;
+    private final Map<String, SiteLetters> letters;
+    private final Map<String, String> sites;
 
     public LauncherController(LauncherService service) {
         this.service = service;
+        letters = collectLetters();
+        sites = sitesMap();
     }
 
     @ApiOperation(value = "Launch scraper with Parameter")
     @GetMapping("/{site}/{letter}")
-    public ResponseEntity<String> launchByLetter(@ApiParam(name = "site",
-            required = true, example = "test24ru",
-            allowableValues = "test24su, test24ru")
-                                         @PathVariable String site,
+    public ResponseEntity<String> launchByLetter(
+            @ApiParam(name = "site",
+                    required = true, example = "test24ru",
+                    allowableValues = "test24ru, test24su")
+            @PathVariable String site,
             @ApiParam(name = "letter", required = true, example = "A_1",
-            allowableValues = "A_1, B_1, B_2")
-                                         @PathVariable String letter) {
+                    allowableValues = "A_1, B_1, B_2")
+            @PathVariable String letter) throws InvalidInputException {
+        if (!letters.containsKey(letter)) {
+            throw new InvalidInputException("Wrong parameter: letter.");
+        }
+        if (!sites.containsKey(site)) {
+            throw new InvalidInputException("Wrong parameter: site.");
+        }
         return ResponseEntity.ok(service.executeByLetter(site, letter));
     }
 
@@ -37,9 +56,12 @@ public class LauncherController {
     public ResponseEntity<String> launchAll(
             @ApiParam(name = "site",
                     required = true, example = "test24ru",
-                    allowableValues = "test24su, test24ru")
+                    allowableValues = "test24ru, test24su")
             @PathVariable String site
-    ) {
+    ) throws InvalidInputException {
+        if (!sites.containsKey(site)) {
+            throw new InvalidInputException("Wrong parameter: site.");
+        }
         return ResponseEntity.ok(service.executeAll(site));
     }
 
@@ -48,8 +70,11 @@ public class LauncherController {
     public ResponseEntity<String> getStatus(
             @ApiParam(name = "site",
                     required = true, example = "test24ru",
-                    allowableValues = "test24su, test24ru")
-            @PathVariable String site) {
+                    allowableValues = "test24ru, test24su")
+            @PathVariable String site) throws InvalidInputException {
+        if (!sites.containsKey(site)) {
+            throw new InvalidInputException("Wrong parameter: site.");
+        }
         return ResponseEntity.ok(service.getStatus(site));
     }
 
@@ -58,8 +83,11 @@ public class LauncherController {
     public ResponseEntity<Integer> getPassedTicketsPercent(
             @ApiParam(name = "site",
                     required = true, example = "test24ru",
-                    allowableValues = "test24su, test24ru")
-            @PathVariable String site) {
+                    allowableValues = "test24ru, test24su")
+            @PathVariable String site) throws InvalidInputException {
+        if (!sites.containsKey(site)) {
+            throw new InvalidInputException("Wrong parameter: site.");
+        }
         return ResponseEntity.ok(service.getPassedTicketsPercent(site));
     }
 
@@ -68,9 +96,27 @@ public class LauncherController {
     public ResponseEntity<String> stopParser(
             @ApiParam(name = "site",
                     required = true, example = "test24ru",
-                    allowableValues = "test24su, test24ru")
-            @PathVariable String site) {
+                    allowableValues = "test24ru, test24su")
+            @PathVariable String site) throws InvalidInputException {
+        if (!sites.containsKey(site)) {
+            throw new InvalidInputException("Wrong parameter: site.");
+        }
         service.stop(site);
         return ResponseEntity.ok(service.getStatus(site));
+    }
+
+    private Map<String, SiteLetters> collectLetters() {
+        Map<String, SiteLetters> map = new HashMap<>();
+        for (SiteLetters letter : SiteLetters.values()) {
+            map.put(letter.name(), letter);
+        }
+        return map;
+    }
+
+    private Map<String, String> sitesMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("test24su", "test24su");
+        map.put("test24ru", "test24ru");
+        return map;
     }
 }

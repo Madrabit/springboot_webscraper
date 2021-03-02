@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.util.stream.IntStream;
 
+import static org.junit.Assert.assertEquals;
+
 
 public class UtilsTest {
     @Test
@@ -19,7 +21,7 @@ public class UtilsTest {
     public void cutSubTestNameThenGetLetter() {
         String testName = "Б.1. 1 Эксплуатация объектов нефтехимии (ноябрь 2018)";
         String result = testName.substring(0, 7).replaceAll(" ", "");
-        Assert.assertEquals("Б.1.1", result);
+        assertEquals("Б.1.1", result);
     }
 
     @Test
@@ -33,6 +35,8 @@ public class UtilsTest {
         } else if ("Б".equals(letter)) {
             result = "B." + num;
         }
-        Assert.assertEquals("B.17", result);
+        assertEquals("B.17", result);
     }
+
+
 }
