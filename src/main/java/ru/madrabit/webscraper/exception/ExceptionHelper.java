@@ -21,4 +21,10 @@ public class ExceptionHelper {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(value = {NoSuchFileException.class})
+    public ResponseEntity<Object> handleNoSuchFileException(NoSuchFileException ex) {
+        log.error("No such file exception {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }
