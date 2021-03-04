@@ -5,8 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.madrabit.webscraper.exception.InvalidInputException;
+import ru.madrabit.webscraper.selenium.consts.SitesConst;
 import ru.madrabit.webscraper.service.DownloadService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,9 +24,11 @@ import java.util.Optional;
 public class DownloadController {
 
     private final DownloadService service;
+    private final SitesConst sites;
 
-    public DownloadController(DownloadService service) {
+    public DownloadController(DownloadService service, SitesConst sites) {
         this.service = service;
+        this.sites = sites;
     }
 
     @ApiOperation(value = "Download file")
@@ -39,6 +45,9 @@ public class DownloadController {
             @RequestParam(required = true) String test) throws IOException, InvalidInputException {
         if (test == null || test.isEmpty() ) {
             throw new InvalidInputException("Empty parameter - test");
+        }
+        if (!sites.getMap().containsKey(site)) {
+            throw new InvalidInputException("Wrong parameter: site.");
         }
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "force-download"));
@@ -68,7 +77,10 @@ public class DownloadController {
     public byte[] downloadFolder(
             @ApiParam(name = "site", required = true, example = "test24ru",
                     allowableValues = "test24ru, test24su")
-            @RequestParam(required = true) String site, HttpServletResponse response) throws IOException {
+            @RequestParam(required = true) String site, HttpServletResponse response) throws IOException, InvalidInputException {
+        if (!sites.getMap().containsKey(site)) {
+            throw new InvalidInputException("Wrong parameter: site.");
+        }
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader("Content-Disposition", "attachment; filename=\"" + site + ".zip\"");
         return service.getZipFromFolder(site);

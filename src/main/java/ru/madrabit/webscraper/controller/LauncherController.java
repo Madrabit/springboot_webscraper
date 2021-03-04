@@ -3,8 +3,6 @@ package ru.madrabit.webscraper.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.maven.model.Site;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.madrabit.webscraper.exception.InvalidInputException;
 import ru.madrabit.webscraper.selenium.consts.SiteLetters;
+import ru.madrabit.webscraper.selenium.consts.SitesConst;
 import ru.madrabit.webscraper.service.LauncherService;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,12 +22,12 @@ import java.util.Map;
 public class LauncherController {
     private final LauncherService service;
     private final Map<String, SiteLetters> letters;
-    private final Map<String, String> sites;
+    private final SitesConst sites;
 
-    public LauncherController(LauncherService service) {
+    public LauncherController(LauncherService service, SitesConst sites) {
         this.service = service;
         letters = collectLetters();
-        sites = sitesMap();
+        this.sites = sites;
     }
 
     @ApiOperation(value = "Launch scraper with Parameter")
@@ -45,7 +43,7 @@ public class LauncherController {
         if (!letters.containsKey(letter)) {
             throw new InvalidInputException("Wrong parameter: letter.");
         }
-        if (!sites.containsKey(site)) {
+        if (!sites.getMap().containsKey(site)) {
             throw new InvalidInputException("Wrong parameter: site.");
         }
         return ResponseEntity.ok(service.executeByLetter(site, letter));
@@ -59,7 +57,7 @@ public class LauncherController {
                     allowableValues = "test24ru, test24su")
             @PathVariable String site
     ) throws InvalidInputException {
-        if (!sites.containsKey(site)) {
+        if (!sites.getMap().containsKey(site)) {
             throw new InvalidInputException("Wrong parameter: site.");
         }
         return ResponseEntity.ok(service.executeAll(site));
@@ -72,7 +70,7 @@ public class LauncherController {
                     required = true, example = "test24ru",
                     allowableValues = "test24ru, test24su")
             @PathVariable String site) throws InvalidInputException {
-        if (!sites.containsKey(site)) {
+        if (!sites.getMap().containsKey(site)) {
             throw new InvalidInputException("Wrong parameter: site.");
         }
         return ResponseEntity.ok(service.getStatus(site));
@@ -85,7 +83,7 @@ public class LauncherController {
                     required = true, example = "test24ru",
                     allowableValues = "test24ru, test24su")
             @PathVariable String site) throws InvalidInputException {
-        if (!sites.containsKey(site)) {
+        if (!sites.getMap().containsKey(site)) {
             throw new InvalidInputException("Wrong parameter: site.");
         }
         return ResponseEntity.ok(service.getPassedTicketsPercent(site));
@@ -98,7 +96,7 @@ public class LauncherController {
                     required = true, example = "test24ru",
                     allowableValues = "test24ru, test24su")
             @PathVariable String site) throws InvalidInputException {
-        if (!sites.containsKey(site)) {
+        if (!sites.getMap().containsKey(site)) {
             throw new InvalidInputException("Wrong parameter: site.");
         }
         service.stop(site);
@@ -110,13 +108,6 @@ public class LauncherController {
         for (SiteLetters letter : SiteLetters.values()) {
             map.put(letter.name(), letter);
         }
-        return map;
-    }
-
-    private Map<String, String> sitesMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("test24su", "test24su");
-        map.put("test24ru", "test24ru");
         return map;
     }
 }

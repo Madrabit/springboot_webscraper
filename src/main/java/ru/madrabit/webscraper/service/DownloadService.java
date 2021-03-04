@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import ru.madrabit.webscraper.selenium.consts.SitesConst;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -24,6 +25,7 @@ import java.util.zip.ZipOutputStream;
 public class DownloadService {
     private final static String s = File.separator;
     private static final String BASE_DIR = System.getProperty("user.dir") + s + "tests" + s;
+
 
     public Optional<ByteArrayResource> getFile(String site, String test) {
         Optional<ByteArrayResource> resource = null;
