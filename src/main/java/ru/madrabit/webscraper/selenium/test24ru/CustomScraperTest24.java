@@ -30,7 +30,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
     public boolean workA() {
         seleniumHandler.openPage(ElementsConstTest24Ru.A_TICKETS);
         List<String> ticketsScraper = urlCrawler.scrapeTickets();
-        tickets = urlCrawler.getTicketsUrlForA1(ticketsScraper);
+        tickets = urlCrawler.pushTicketsToA1(ticketsScraper);
         log.info("Tickets size: {}", tickets.size());
         if (isStopped) {
             seleniumHandler.stop();
@@ -71,7 +71,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
     }
 
 
-    private List<Question> getQuestions(QuestionsParser questionsParser) {
+    public List<Question> getQuestions(QuestionsParser questionsParser) {
         Optional<List<Question>> questionsList = Optional.ofNullable(questionsParser.iterateTickets());
         log.info("Questions in ticket: {}", questionsList.isPresent() ? questionsList.get().size() : new ArrayList<>());
         return questionsList.orElse(new ArrayList<>());

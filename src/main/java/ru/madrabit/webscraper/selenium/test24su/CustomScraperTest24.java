@@ -52,7 +52,7 @@ public class CustomScraperTest24 extends CustomScraperBase {
             return true;
         }
         List<String> scrapeTickets = urlCrawler.scrapeTickets();
-        Map<String, List<String>> tickets = urlCrawler.getTicketsUrlForA1(scrapeTickets);
+        Map<String, List<String>> tickets = urlCrawler.pushTicketsToA1(scrapeTickets);
         log.info("Tickets size: {}", tickets.size());
         questionsParser = new QuestionsParser(tickets.get("A.1"), "A.1", seleniumHandler);
         if (isStopped) {

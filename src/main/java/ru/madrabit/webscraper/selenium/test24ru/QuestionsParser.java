@@ -85,10 +85,8 @@ public class QuestionsParser extends QuestionsParserBase {
             if (!webElem.getCssValue("color").isEmpty() && checkRgba(webElem.getCssValue("color"))) {
                 answer.setRight(true);
                 question.getAnswerNumber().add(serial);
-                answer.setText(webElem.getText());
-            } else {
-                answer.setText(webElem.getText());
             }
+            answer.setText(webElem.getText());
             question.getAnswerSet().add(answer);
         }
         return question;

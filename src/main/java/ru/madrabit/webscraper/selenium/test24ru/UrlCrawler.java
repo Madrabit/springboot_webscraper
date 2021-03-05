@@ -8,8 +8,10 @@ import ru.madrabit.webscraper.selenium.config.SeleniumHandler;
 import ru.madrabit.webscraper.selenium.consts.SiteLetters;
 import ru.madrabit.webscraper.selenium.exceptions.NoSuchLetterException;
 
-import java.util.*;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 

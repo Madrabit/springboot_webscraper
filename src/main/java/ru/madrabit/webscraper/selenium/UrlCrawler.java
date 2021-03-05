@@ -12,7 +12,7 @@ public interface UrlCrawler {
 
     Map<String, List<String>> getTicketsUrl(Map<String, String> subTests);
 
-    Map<String, List<String>> getTicketsUrlForA1(List<String> ticketsScraper);
+    Map<String, List<String>> pushTicketsToA1(List<String> ticketsScraper);
 
     List<String> scrapeTickets();
 }

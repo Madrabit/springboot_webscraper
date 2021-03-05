@@ -35,7 +35,7 @@ public abstract class UrlCrawlerBase implements UrlCrawler {
     }
 
     @Override
-    public Map<String, List<String>> getTicketsUrlForA1(List<String> ticketsList) {
+    public Map<String, List<String>> pushTicketsToA1(List<String> ticketsList) {
         Map<String, List<String>> tickets = new HashMap<>();
 //        List<String> ticketsList = scrapeTickets();
         tickets.put("A.1", ticketsList);
